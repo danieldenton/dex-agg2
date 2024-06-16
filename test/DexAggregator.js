@@ -10,7 +10,8 @@ const ether = tokens;
 const shares = ether;
 
 describe("Dex Aggregator", () => {
-  let amm1,
+  let dexAggregator,
+    amm1,
     amm2,
     accounts,
     deployer,
@@ -50,16 +51,31 @@ describe("Dex Aggregator", () => {
     const AMM = await ethers.getContractFactory("AMM");
     amm1 = await AMM.deploy(token1.address, token2.address);
     amm2 = await AMM.deploy(token1.address, token2.address);
+
+    const DEX_AGGREGATOR = await ethers.getContractFactory("DexAggregator");
+    dexAggregator = await DEX_AGGREGATOR.deploy(
+      token1.address,
+      token2.address,
+      amm1.address,
+      amm2.address
+    );
   });
   describe("Deployment", () => {
     it("has an address", async () => {
-      expect(amm.address).to.not.equal(0x0);
+      console.log(dexAggregator.address);
+      expect(dexAggregator.address).to.not.equal(0x0);
     });
-    it("returns token1", async () => {
-      expect(await amm.token1()).to.equal(token1.address);
-    });
-    it("returns token2", async () => {
-      expect(await amm.token2()).to.equal(token2.address);
-    });
+        it("returns token1", async () => {
+          expect(await dexAggregator.token1()).to.equal(token1.address);
+        });
+        it("returns token2", async () => {
+          expect(await dexAggregator.token2()).to.equal(token2.address);
+        });
+        it("returns amm1", async () => {
+          expect(await dexAggregator.amm1()).to.equal(amm1.address);
+        });
+        it("returns amm2", async () => {
+          expect(await dexAggregator.amm2()).to.equal(amm2.address);
+        });
   });
 });

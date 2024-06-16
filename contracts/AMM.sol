@@ -5,7 +5,6 @@ import "hardhat/console.sol";
 import "./Token.sol";
 
 contract AMM {
-    string public name;
     Token public token1;
     Token public token2;
 
@@ -28,8 +27,7 @@ contract AMM {
         uint256 timestamp
     );
 
-    constructor(string _name, Token _token1, Token _token2) {
-        name = _name;
+    constructor(Token _token1, Token _token2) {
         token1 = _token1;
         token2 = _token2;
     }
