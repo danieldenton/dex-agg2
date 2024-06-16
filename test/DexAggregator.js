@@ -62,20 +62,21 @@ describe("Dex Aggregator", () => {
   });
   describe("Deployment", () => {
     it("has an address", async () => {
-      console.log(dexAggregator.address);
+      // console.log(dexAggregator.address);
+      // Ask about this test.
       expect(dexAggregator.address).to.not.equal(0x0);
     });
-        it("returns token1", async () => {
-          expect(await dexAggregator.token1()).to.equal(token1.address);
-        });
-        it("returns token2", async () => {
-          expect(await dexAggregator.token2()).to.equal(token2.address);
-        });
-        it("returns amm1", async () => {
-          expect(await dexAggregator.amm1()).to.equal(amm1.address);
-        });
-        it("returns amm2", async () => {
-          expect(await dexAggregator.amm2()).to.equal(amm2.address);
-        });
+    it("returns token1", async () => {
+      expect(await dexAggregator.token1()).to.equal(token1.address);
+    });
+    it("returns token2", async () => {
+      expect(await dexAggregator.token2()).to.equal(token2.address);
+    });
+    it("returns amm1", async () => {
+      expect(await dexAggregator.amm1()).to.equal(amm1.address);
+    });
+    it("returns amm2", async () => {
+      expect(await dexAggregator.amm2()).to.equal(amm2.address);
+    });
   });
 });
