@@ -102,12 +102,18 @@ describe("Dex Aggregator", () => {
         amount = tokens(1)
         amm2token1cost = await amm2.calculateToken2Swap(amount)
         amm1token2cost = await amm1.calculateToken1Swap(amount);
+        amm1token1cost = await amm1.calculateToken2Swap(amount)
+        amm2token2cost = await amm2.calculateToken1Swap(amount);
     })
     it("finds the lowest cost between amm1 and amm2 for token1", async () => {
         expect(await dexAggregator.connect(investor2).getLowestToken1Cost(amount)).to.equal(amm2token1cost)
     })
     it("finds the lowest cost between amm1 and amm2 for token1", async () => {
         expect(await dexAggregator.connect(investor1).getLowestToken2Cost(amount)).to.equal(amm1token2cost)
+    })
+    it("is properly measuring values against each other", () => {
+        expect(amm1token1cost).to.be.greaterThan(amm2token1cost)
+        expect(amm2token2cost).to.be.greaterThan(amm1token2cost)
     })
   });
 });

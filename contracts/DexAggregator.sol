@@ -10,6 +10,7 @@ contract DexAggregator {
     Token public token2;
     AMM public amm1;
     AMM public amm2;
+    address public chosenAMM;
 
    
     uint256 constant PRECISION = 10 ** 18;
@@ -48,5 +49,7 @@ contract DexAggregator {
             token2Cost = token2Amm2Cost;
         }
     }
+
+    // function swapToken1() external returns ()
 
 }
