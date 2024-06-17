@@ -32,14 +32,7 @@ describe("Dex Aggregator", () => {
     token1 = await Token.deploy("Rumpelina", "RUMP", "1000000");
     token2 = await Token.deploy("Darkness", "DRKN", "1000000");
 
-    let transaction = await token1
-      .connect(deployer)
-      .transfer(liquidityProvider.address, tokens(100000));
-    await transaction.wait();
-    transaction = await token2
-      .connect(deployer)
-      .transfer(liquidityProvider.address, tokens(100000));
-    await transaction.wait();
+    // transfer tokens to investors
     transaction = await token1
       .connect(deployer)
       .transfer(investor1.address, tokens(100000));
@@ -51,6 +44,31 @@ describe("Dex Aggregator", () => {
     const AMM = await ethers.getContractFactory("AMM");
     amm1 = await AMM.deploy(token1.address, token2.address);
     amm2 = await AMM.deploy(token1.address, token2.address);
+
+    // add liquidity
+    amount = tokens(100000);
+    // AMM1
+    transaction = await token1.connect(deployer).approve(amm1.address, amount);
+    await transaction.wait();
+    transaction = await token2.connect(deployer).approve(amm1.address, amount);
+    await transaction.wait();
+    transaction = await amm1.connect(deployer).addLiquidity(amount, amount);
+    await transaction.wait();
+    // AMM2
+    transaction = await token1.connect(deployer).approve(amm2.address, amount);
+    await transaction.wait();
+    transaction = await token2.connect(deployer).approve(amm2.address, amount);
+    await transaction.wait();
+    transaction = await amm2.connect(deployer).addLiquidity(amount, amount);
+    await transaction.wait();
+
+    // create a swap on AMM1
+    transaction = await token1
+      .connect(investor1)
+      .approve(amm1.address, tokens(100000));
+    await transaction.wait();
+    transaction = await amm1.connect(investor1).swapToken1(tokens(1));
+      await transaction.wait();
 
     const DEX_AGGREGATOR = await ethers.getContractFactory("DexAggregator");
     dexAggregator = await DEX_AGGREGATOR.deploy(
@@ -78,5 +96,14 @@ describe("Dex Aggregator", () => {
     it("returns amm2", async () => {
       expect(await dexAggregator.amm2()).to.equal(amm2.address);
     });
+  });
+  describe("Finds the Best Price Between AMMs", () => {
+    it("finds the lowest cost between amm1 and amm2 for token1", async () => {
+        amm1token1cost = await amm1.calculateToken2Swap(tokens(1));
+        amm2token1cost = await amm2.calculateToken2Swap(tokens(1))
+        expect(await dexAggregator.connect(investor2).getLowestToken1Cost(tokens(1))).to.equal(amm2token1cost)
+        
+
+    })
   });
 });
