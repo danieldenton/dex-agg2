@@ -25,13 +25,13 @@ contract DexAggregator {
         uint256 _token2Amount
     ) public view returns (uint256 token1Cost) {
         require(token2.balanceOf(msg.sender) >= _token2Amount, "insufficient funds");
-        uint256 token1Amm1Cost = amm1.calculateToken2Swap(_token2Amount)
-        uint256 token1Amm2Cost = amm2.calculateToken2Swap(_token2Amount)
+        uint256 token1Amm1Cost = amm1.calculateToken2Swap(_token2Amount);
+        uint256 token1Amm2Cost = amm2.calculateToken2Swap(_token2Amount);
 
         if (token1Amm1Cost < token1Amm2Cost) {
-            token1Cost = token1Amm1Cost
+            token1Cost = token1Amm1Cost;
         } else {
-            token1Cost = token1Amm2Cost
+            token1Cost = token1Amm2Cost;
         }
     }
 
@@ -39,13 +39,13 @@ contract DexAggregator {
         uint256 _token1Amount
     ) public view returns (uint256 token2Cost) {
         require(token1.balanceOf(msg.sender) >= _token1Amount, "insufficient funds");
-        uint256 token2Amm1Cost = amm1.calculateToken1Swap(_token1Amount)
-        uint256 token2Amm2Cost = amm2.calculateToken1Swap(_token1Amount)
+        uint256 token2Amm1Cost = amm1.calculateToken1Swap(_token1Amount);
+        uint256 token2Amm2Cost = amm2.calculateToken1Swap(_token1Amount);
 
         if (token2Amm1Cost < token2Amm2Cost) {
-            token1Cost = token1Amm1Cost
+            token2Cost = token2Amm1Cost;
         } else {
-            token1Cost = token1Amm2Cost
+            token2Cost = token2Amm2Cost;
         }
     }
 
