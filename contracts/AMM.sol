@@ -101,24 +101,39 @@ contract AMM {
     }
 
     function swapToken(
-       address _tokeGiveAddress, address _tokenGetAddress uint256, _token1Amount
-    ) external returns (uint256 token2Amount) {
-        Token _tokenGive;
-        Token _tokenGet;
-        token2Amount = calculateToken1Swap(_token1Amount);
-        token1.transferFrom(msg.sender, address(this), _token1Amount);
-        token1Balance += _token1Amount;
-        token2Balance -= token2Amount;
-        token2.transfer(msg.sender, token2Amount);
+       address _tokeGiveAddress, address _tokenGetAddress, uint256 _amount
+    ) external returns (uint256 tokenGetAmount) {
+        uint256 tokenGiveContractBalance = _tokeGiveAddress.balanceOf(address(this));
+        uint256 tokenGetContractBalance = _tokenGetAddress.balanceOf(address(this));
+
+        // Token _tokenGive;
+        // if (_tokenGiveAddress == address(token1)) {
+        //     _tokenGive = token1;
+        // } else {
+        //     _tokenGive = token2;
+        // }
+
+        // Token _tokenGet;
+        // if (_tokenGetAddress == address(token1)) {
+        //     _tokenGet = token1;
+        // } else {
+        //     _tokenGet = token2;
+        // }
+
+        tokenGetAmount = calculateTokenSwap(address _tokeGiveAddress, address _tokenGetAddress uint256, _amount);
+        _tokenGiveAddress.transferFrom(msg.sender, address(this), _token1Amount);
+        tokenGiveContractBalance += _amount;
+        tokenGetContractBalance -= tokenGetAmount;
+        _tokenGetAddress.transfer(msg.sender, tokenGetAmount);
 
         emit Swap(
             msg.sender,
-            address(token1),
-            _token1Amount,
-            address(token2),
-            token2Amount,
-            token1Balance,
-            token2Balance,
+            _tokeGiveAddress,
+            _amount,
+            _tokenGetAddress,
+            tokenGetAmount,
+            tokenGiveContractBalance,
+            tokenGetContractBalance,
             block.timestamp
         );
     }
