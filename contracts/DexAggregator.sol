@@ -21,13 +21,13 @@ contract DexAggregator {
     }
 
     function ammSelector(
-        address _token,
+        address _tokenAddress,
         uint256 _amount
     ) public view returns (address chosenAMM, uint256 cost) {
         uint256 amm1Cost;
         uint256 amm2Cost;
 
-        if (_token == address(token1)) {
+        if (_tokenAddress == address(token1)) {
             amm1Cost = amm1.calculateToken1Swap(_amount);
             amm2Cost = amm2.calculateToken1Swap(_amount);
         } else {
@@ -45,30 +45,32 @@ contract DexAggregator {
     }
 
     function swap(
-        address _token,
+        address _tokenAddress,
         uint256 _amount
     ) public returns (bool success) {
         AMM _amm;
-        (address chosenAMM, uint256 cost) = ammSelector(_token, _amount);
+        Token _token;
+        (address chosenAMM, ) = ammSelector(_tokenAddress, _amount);
 
         if (chosenAMM == address(amm1)) {
             _amm = amm1;
         } else {
             _amm = amm2;
         }
-        
-        // if (_token == address(token1)) {
-        //     require(
-        //         token1.balanceOf(msg.sender) >= _amount,
-        //         "insufficient funds"
-        //     );
-        //     _amm.swapToken1(_amount);
-        // } else {
-        //     require(
-        //         token2.balanceOf(msg.sender) >= _amount,
-        //         "insufficient funds"
-        //     );
-        //     _amm.swapToken2(_amount);
-        // }
+
+        if (_tokenAddress == address(token1)) {
+            _token = token1;
+        } else {
+            _token = token2;
+        }
+
+        // require(
+        //     token1.balanceOf(msg.sender) >= _amount,
+        //     "insufficient funds"
+        // );
+        _token.approve(address(this), _amount);
+        _token.approve(address(_amm), _amount);
+        _amm.swapToken1(_amount);
+        success = true;
     }
 }
