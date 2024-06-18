@@ -4,6 +4,23 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./Token.sol";
 
+interface IERC20 {
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external returns (bool);
+
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    function balanceOf(address account) external view returns (uint256);
+}
+
 contract AMM {
     Token public token1;
     Token public token2;
@@ -83,13 +100,21 @@ contract AMM {
     }
 
     function calculateTokenSwap(
-        address _tokeGiveAddress, address _tokenGetAddress, uint256 _amount
+        address _tokenGiveAddress,
+        address _tokenGetAddress,
+        uint256 _amount
     ) public view returns (uint256 tokenGetAmount) {
-        uint256 tokenGiveContractBalance = _tokeGiveAddress.balanceOf(address(this));
-        uint256 tokenGetContractBalance = _tokenGetAddress.balanceOf(address(this));
+        IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
+        IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
+        uint256 tokenGiveContractBalance = _tokenGiveContract.balanceOf(
+            address(this)
+        );
+        uint256 tokenGetContractBalance = _tokenGetContract.balanceOf(
+            address(this)
+        );
 
-        uint256 tokenGiveContractAfter = tokenGetContractBalance + _amount;
+        uint256 tokenGiveContractAfter = tokenGiveContractBalance + _amount;
         uint tokenGetContractAfter = K / tokenGiveContractAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractAfter;
 
@@ -97,38 +122,39 @@ contract AMM {
             tokenGetAmount--;
         }
 
-        require(tokenGetAmount < tokenGetContractBalance, "cannot exceed pool balance");
+        require(
+            tokenGetAmount < tokenGetContractBalance,
+            "cannot exceed pool balance"
+        );
     }
 
     function swapToken(
-       address _tokeGiveAddress, address _tokenGetAddress, uint256 _amount
+        address _tokenGiveAddress,
+        address _tokenGetAddress,
+        uint256 _amount
     ) external returns (uint256 tokenGetAmount) {
-        uint256 tokenGiveContractBalance = _tokeGiveAddress.balanceOf(address(this));
-        uint256 tokenGetContractBalance = _tokenGetAddress.balanceOf(address(this));
+        IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
+        IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
+        uint256 tokenGiveContractBalance = _tokenGiveContract.balanceOf(
+            address(this)
+        );
+        uint256 tokenGetContractBalance = _tokenGetContract.balanceOf(
+            address(this)
+        );
 
-        // Token _tokenGive;
-        // if (_tokenGiveAddress == address(token1)) {
-        //     _tokenGive = token1;
-        // } else {
-        //     _tokenGive = token2;
-        // }
-
-        // Token _tokenGet;
-        // if (_tokenGetAddress == address(token1)) {
-        //     _tokenGet = token1;
-        // } else {
-        //     _tokenGet = token2;
-        // }
-
-        tokenGetAmount = calculateTokenSwap(address _tokeGiveAddress, address _tokenGetAddress uint256, _amount);
-        _tokenGiveAddress.transferFrom(msg.sender, address(this), _token1Amount);
+        tokenGetAmount = calculateTokenSwap(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amount
+        );
+        _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
         tokenGiveContractBalance += _amount;
         tokenGetContractBalance -= tokenGetAmount;
-        _tokenGetAddress.transfer(msg.sender, tokenGetAmount);
+        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
 
         emit Swap(
             msg.sender,
-            _tokeGiveAddress,
+            _tokenGiveAddress,
             _amount,
             _tokenGetAddress,
             tokenGetAmount,
@@ -137,41 +163,6 @@ contract AMM {
             block.timestamp
         );
     }
-
-    // function calculateToken2Swap(
-    //     uint256 _token2Amount
-    // ) public view returns (uint256 token1Amount) {
-    //     uint256 token2After = token2Balance + _token2Amount;
-    //     uint token1After = K / token2After;
-    //     token1Amount = token1Balance - token1After;
-
-    //     if (token1Amount == token1Balance) {
-    //         token1Amount--;
-    //     }
-
-    //     require(token1Amount < token1Balance, "cannot exceed pool balance");
-    // }
-
-    // function swapToken2(
-    //     uint256 _token2Amount
-    // ) external returns (uint256 token1Amount) {
-    //     token1Amount = calculateToken2Swap(_token2Amount);
-    //     token2.transferFrom(msg.sender, address(this), _token2Amount);
-    //     token2Balance += _token2Amount;
-    //     token1Balance -= token1Amount;
-    //     token1.transfer(msg.sender, token1Amount);
-
-    //     emit Swap(
-    //         msg.sender,
-    //         address(token2),
-    //         _token2Amount,
-    //         address(token1),
-    //         token1Amount,
-    //         token1Balance,
-    //         token2Balance,
-    //         block.timestamp
-    //     );
-    // }
 
     function calculateWithdrawAmount(
         uint256 _share

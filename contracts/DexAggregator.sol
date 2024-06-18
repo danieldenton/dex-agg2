@@ -21,19 +21,23 @@ contract DexAggregator {
     }
 
     function ammSelector(
-        address _tokenAddress,
+        address _tokenGiveAddress,
+        address _tokenGetAddress,
         uint256 _amount
     ) public view returns (address chosenAMM, uint256 cost) {
         uint256 amm1Cost;
         uint256 amm2Cost;
 
-        if (_tokenAddress == address(token1)) {
-            amm1Cost = amm1.calculateToken1Swap(_amount);
-            amm2Cost = amm2.calculateToken1Swap(_amount);
-        } else {
-            amm1Cost = amm1.calculateToken2Swap(_amount);
-            amm2Cost = amm2.calculateToken2Swap(_amount);
-        }
+        amm1Cost = amm1.calculateTokenSwap(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amount
+        );
+        amm2Cost = amm2.calculateTokenSwap(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amount
+        );
 
         if (amm1Cost < amm2Cost) {
             chosenAMM = address(amm1);
@@ -44,35 +48,35 @@ contract DexAggregator {
         }
     }
 
-    function swap(
-        address _tokenAddress,
-        uint256 _amount
-    ) public returns (bool success) {
-        AMM _amm;
-        Token _token;
-        (address chosenAMM, ) = ammSelector(_tokenAddress, _amount);
+    // function swap(
+    //     address _tokenAddress,
+    //     uint256 _amount
+    // ) public returns (bool success) {
+    //     AMM _amm;
+    //     Token _token;
+    //     (address chosenAMM, ) = ammSelector(_tokenAddress, _amount);
 
-        if (chosenAMM == address(amm1)) {
-            _amm = amm1;
-        } else {
-            _amm = amm2;
-        }
+    //     if (chosenAMM == address(amm1)) {
+    //         _amm = amm1;
+    //     } else {
+    //         _amm = amm2;
+    //     }
 
-        if (_tokenAddress == address(token1)) {
-            _token = token1;
-            _token.transferFrom(msg.sender, address(this), _amount);
-            _token.approve(address(_amm), _amount);
+    //     if (_tokenAddress == address(token1)) {
+    //         _token = token1;
+    //         _token.transferFrom(msg.sender, address(this), _amount);
+    //         _token.approve(address(_amm), _amount);
 
-            _amm.swapToken1(_amount);
-        } else {
-            _token = token2;
-        }
+    //         _amm.swapToken1(_amount);
+    //     } else {
+    //         _token = token2;
+    //     }
 
         // require(
         //     token1.balanceOf(msg.sender) >= _amount,
         //     "insufficient funds"
         // );
 
-        success = true;
-    }
+    //     success = true;
+    // }
 }
