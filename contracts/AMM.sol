@@ -82,23 +82,29 @@ contract AMM {
         token1Amount = (token1Balance * _token2Amount) / token2Balance;
     }
 
-    function calculateToken1Swap(
-        uint256 _token1Amount
-    ) public view returns (uint256 token2Amount) {
-        uint256 token1After = token1Balance + _token1Amount;
-        uint token2After = K / token1After;
-        token2Amount = token2Balance - token2After;
+    function calculateTokenSwap(
+        address _tokeGiveAddress, address _tokenGetAddress, uint256 _amount
+    ) public view returns (uint256 tokenGetAmount) {
+        uint256 tokenGiveContractBalance = _tokeGiveAddress.balanceOf(address(this));
+        uint256 tokenGetContractBalance = _tokenGetAddress.balanceOf(address(this));
 
-        if (token2Amount == token2Balance) {
-            token2Amount--;
+
+        uint256 tokenGiveContractAfter = tokenGetContractBalance + _amount;
+        uint tokenGetContractAfter = K / tokenGiveContractAfter;
+        tokenGetAmount = tokenGetContractBalance - tokenGetContractAfter;
+
+        if (tokenGetAmount == tokenGetContractBalance) {
+            tokenGetAmount--;
         }
 
-        require(token2Amount < token2Balance, "cannot exceed pool balance");
+        require(tokenGetAmount < tokenGetContractBalance, "cannot exceed pool balance");
     }
 
-    function swapToken1(
-        uint256 _token1Amount
+    function swapToken(
+       address _tokeGiveAddress, address _tokenGetAddress uint256, _token1Amount
     ) external returns (uint256 token2Amount) {
+        Token _tokenGive;
+        Token _tokenGet;
         token2Amount = calculateToken1Swap(_token1Amount);
         token1.transferFrom(msg.sender, address(this), _token1Amount);
         token1Balance += _token1Amount;
@@ -117,40 +123,40 @@ contract AMM {
         );
     }
 
-    function calculateToken2Swap(
-        uint256 _token2Amount
-    ) public view returns (uint256 token1Amount) {
-        uint256 token2After = token2Balance + _token2Amount;
-        uint token1After = K / token2After;
-        token1Amount = token1Balance - token1After;
+    // function calculateToken2Swap(
+    //     uint256 _token2Amount
+    // ) public view returns (uint256 token1Amount) {
+    //     uint256 token2After = token2Balance + _token2Amount;
+    //     uint token1After = K / token2After;
+    //     token1Amount = token1Balance - token1After;
 
-        if (token1Amount == token1Balance) {
-            token1Amount--;
-        }
+    //     if (token1Amount == token1Balance) {
+    //         token1Amount--;
+    //     }
 
-        require(token1Amount < token1Balance, "cannot exceed pool balance");
-    }
+    //     require(token1Amount < token1Balance, "cannot exceed pool balance");
+    // }
 
-    function swapToken2(
-        uint256 _token2Amount
-    ) external returns (uint256 token1Amount) {
-        token1Amount = calculateToken2Swap(_token2Amount);
-        token2.transferFrom(msg.sender, address(this), _token2Amount);
-        token2Balance += _token2Amount;
-        token1Balance -= token1Amount;
-        token1.transfer(msg.sender, token1Amount);
+    // function swapToken2(
+    //     uint256 _token2Amount
+    // ) external returns (uint256 token1Amount) {
+    //     token1Amount = calculateToken2Swap(_token2Amount);
+    //     token2.transferFrom(msg.sender, address(this), _token2Amount);
+    //     token2Balance += _token2Amount;
+    //     token1Balance -= token1Amount;
+    //     token1.transfer(msg.sender, token1Amount);
 
-        emit Swap(
-            msg.sender,
-            address(token2),
-            _token2Amount,
-            address(token1),
-            token1Amount,
-            token1Balance,
-            token2Balance,
-            block.timestamp
-        );
-    }
+    //     emit Swap(
+    //         msg.sender,
+    //         address(token2),
+    //         _token2Amount,
+    //         address(token1),
+    //         token1Amount,
+    //         token1Balance,
+    //         token2Balance,
+    //         block.timestamp
+    //     );
+    // }
 
     function calculateWithdrawAmount(
         uint256 _share

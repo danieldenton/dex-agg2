@@ -60,6 +60,10 @@ contract DexAggregator {
 
         if (_tokenAddress == address(token1)) {
             _token = token1;
+            _token.transferFrom(msg.sender, address(this), _amount);
+            _token.approve(address(_amm), _amount);
+
+            _amm.swapToken1(_amount);
         } else {
             _token = token2;
         }
@@ -68,9 +72,7 @@ contract DexAggregator {
         //     token1.balanceOf(msg.sender) >= _amount,
         //     "insufficient funds"
         // );
-        _token.approve(address(this), _amount);
-        _token.approve(address(_amm), _amount);
-        _amm.swapToken1(_amount);
+
         success = true;
     }
 }

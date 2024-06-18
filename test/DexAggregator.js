@@ -130,6 +130,10 @@ describe("Dex Aggregator", () => {
       const investor1Token2BalanceBeforeSwap = await token1.balanceOf(
         investor1.address
       );
+      transaction = await token1
+        .connect(investor1)
+        .approve(dexAggregator.address, tokens(5));
+      await transaction.wait();
       transaction = await dexAggregator
         .connect(investor1)
         .swap(token1.address, amount);
