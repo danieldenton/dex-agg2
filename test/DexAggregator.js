@@ -17,7 +17,6 @@ describe("Dex Aggregator", () => {
     deployer,
     token1,
     token2,
-    liquidityProvider,
     investor1,
     investor2;
 
@@ -105,15 +104,15 @@ describe("Dex Aggregator", () => {
         amm1token1cost = await amm1.calculateToken2Swap(amount)
         amm2token2cost = await amm2.calculateToken1Swap(amount);
     })
-    it("finds the lowest cost between amm1 and amm2 for token1", async () => {
-        expect(await dexAggregator.connect(investor2).getLowestToken1Cost(amount)).to.equal(amm2token1cost)
+    it("finds the best amm for your token1 swap", async () => {
+        const [chosenAMM, cost] = await dexAggregator.connect(investor2).ammSelector(token1.address, amount);
+        expect(chosenAMM).to.equal(amm1.address)
+        expect(cost).to.equal(amm1token2cost)
     })
-    it("finds the lowest cost between amm1 and amm2 for token1", async () => {
-        expect(await dexAggregator.connect(investor1).getLowestToken2Cost(amount)).to.equal(amm1token2cost)
-    })
-    it("is properly measuring values against each other", () => {
-        expect(amm1token1cost).to.be.greaterThan(amm2token1cost)
-        expect(amm2token2cost).to.be.greaterThan(amm1token2cost)
+    it("finds the best amm for your token2 swap", async () => {
+        const [chosenAMM, cost] = await dexAggregator.connect(investor2).ammSelector(token2.address, amount);
+        expect(chosenAMM).to.equal(amm2.address)
+        expect(cost).to.equal(amm2token1cost)
     })
   });
 });
