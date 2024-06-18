@@ -26,7 +26,7 @@ contract DexAggregator {
     ) public view returns (address chosenAMM, uint256 cost) {
         uint256 amm1Cost;
         uint256 amm2Cost;
-        
+
         if (_token == address(token1)) {
             amm1Cost = amm1.calculateToken1Swap(_amount);
             amm2Cost = amm2.calculateToken1Swap(_amount);
@@ -44,10 +44,31 @@ contract DexAggregator {
         }
     }
 
-    // function swap(uint256 _amount) public returns (bool success) {
-    //     require(
-    //         token1.balanceOf(msg.sender) >= _token1Amount,
-    //         "insufficient funds"
-    //     );
-    // }
+    function swap(
+        address _token,
+        uint256 _amount
+    ) public returns (bool success) {
+        AMM _amm;
+        (address chosenAMM, uint256 cost) = ammSelector(_token, _amount);
+
+        if (chosenAMM == address(amm1)) {
+            _amm = amm1;
+        } else {
+            _amm = amm2;
+        }
+        
+        // if (_token == address(token1)) {
+        //     require(
+        //         token1.balanceOf(msg.sender) >= _amount,
+        //         "insufficient funds"
+        //     );
+        //     _amm.swapToken1(_amount);
+        // } else {
+        //     require(
+        //         token2.balanceOf(msg.sender) >= _amount,
+        //         "insufficient funds"
+        //     );
+        //     _amm.swapToken2(_amount);
+        // }
+    }
 }

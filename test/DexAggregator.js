@@ -7,8 +7,6 @@ const tokens = (n) => {
 
 const ether = tokens;
 
-const shares = ether;
-
 describe("Dex Aggregator", () => {
   let dexAggregator,
     amm1,
