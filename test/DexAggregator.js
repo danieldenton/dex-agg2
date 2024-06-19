@@ -80,7 +80,6 @@ describe("Dex Aggregator", () => {
     amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
       token2.address,
-      
       amount
     );
     amm1Token1ReturnAmount = await amm1.calculateTokenSwap(
@@ -113,7 +112,7 @@ describe("Dex Aggregator", () => {
         .connect(investor2)
         .ammSelector(token2.address, token1.address, amount);
       expect(chosenAMM).to.equal(amm1.address);
-      expect(returnAmount).to.equal(amm1Token1ReturnAmount); 
+      expect(returnAmount).to.equal(amm1Token1ReturnAmount);
     });
   });
   describe("Performs Swaps", () => {
@@ -147,7 +146,7 @@ describe("Dex Aggregator", () => {
       );
     });
     it("emits an event", () => {
-      const event = result.events[6]
+      const event = result.events[6];
       // console.log(event)
       expect(event.event).to.equal("Swap");
 
@@ -158,17 +157,15 @@ describe("Dex Aggregator", () => {
       expect(args.tokenGive).to.equal(token1.address);
       expect(args.tokenGiveAmount).to.equal(amount);
       expect(args.tokenGet).to.equal(token2.address);
-      // expect(args.tokenGetAmount).to.equal(?);
+      expect(args.tokenGetAmount).to.equal(amm2Token2ReturnAmount);
     });
     it("successfully swaps token1 for token2 ", async () => {
-      expect(Math.round(investor1Token1BalanceAfterSwap)).to.equal(
-        investor1Token1BalanceBeforeSwap - formattedAmount
+      const tokenGetAmount = formatEther(result.events[6].args.tokenGetAmount);
+      expect(Number(investor1Token1BalanceAfterSwap)).to.equal(
+        Number(investor1Token1BalanceBeforeSwap) - Number(formattedAmount)
       );
-      // expect(Math.round(investor1Token2BalanceAfterSwap)).to.equal(
-      //   investor1Token2BalanceBeforeSwap + amm1
-      // );
-      expect(Number(investor1Token2BalanceAfterSwap)).to.be.greaterThan(
-        Number(investor1Token2BalanceBeforeSwap)
+      expect(Number(investor1Token2BalanceAfterSwap)).to.equal(
+        Number(investor1Token2BalanceBeforeSwap) + Number(tokenGetAmount)
       );
     });
   });
