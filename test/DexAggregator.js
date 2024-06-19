@@ -77,14 +77,15 @@ describe("Dex Aggregator", () => {
 
     // first DEX_AGGREGATOR function call
     amount = tokens(1);
-    amm2token1cost = await amm2.calculateTokenSwap(
-      token2.address,
+    amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
+      token2.address,
+      
       amount
     );
-    amm1token2cost = await amm1.calculateTokenSwap(
-      token1.address,
+    amm1Token1ReturnAmount = await amm1.calculateTokenSwap(
       token2.address,
+      token1.address,
       amount
     );
   });
@@ -101,18 +102,18 @@ describe("Dex Aggregator", () => {
   });
   describe("Finds the Best Price Between AMMs", () => {
     it("finds the best amm for your token1 swap", async () => {
-      const [chosenAMM, cost] = await dexAggregator
+      const [chosenAMM, returnAmount] = await dexAggregator
         .connect(investor2)
         .ammSelector(token1.address, token2.address, amount);
-      expect(chosenAMM).to.equal(amm1.address);
-      expect(cost).to.equal(amm1token2cost);
+      expect(chosenAMM).to.equal(amm2.address);
+      expect(returnAmount).to.equal(amm2Token2ReturnAmount);
     });
     it("finds the best amm for your token2 swap", async () => {
-      const [chosenAMM, cost] = await dexAggregator
+      const [chosenAMM, returnAmount] = await dexAggregator
         .connect(investor2)
         .ammSelector(token2.address, token1.address, amount);
-      expect(chosenAMM).to.equal(amm2.address);
-      expect(cost).to.equal(amm2token1cost);
+      expect(chosenAMM).to.equal(amm1.address);
+      expect(returnAmount).to.equal(amm1Token1ReturnAmount); 
     });
   });
   describe("Performs Swaps", () => {
@@ -147,13 +148,13 @@ describe("Dex Aggregator", () => {
     });
     it("emits an event", () => {
       const event = result.events[6]
-      console.log(event)
+      // console.log(event)
       expect(event.event).to.equal("Swap");
 
       const args = event.args;
       expect(args.from).to.equal(investor1.address);
       expect(args.to).to.equal(dexAggregator.address);
-      expect(args.amm).to.equal(amm1.address);
+      expect(args.amm).to.equal(amm2.address);
       expect(args.tokenGive).to.equal(token1.address);
       expect(args.tokenGiveAmount).to.equal(amount);
       expect(args.tokenGet).to.equal(token2.address);
