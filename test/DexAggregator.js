@@ -120,7 +120,7 @@ describe("Dex Aggregator", () => {
       investor1Token2BalanceBeforeSwap,
       investor1Token1BalanceAfterSwap,
       investor1Token2BalanceAfterSwap,
-      formattedAmount,
+      formattedGiveAmount,
       result;
     beforeEach(async () => {
       investor1Token1BalanceBeforeSwap = formatEther(
@@ -129,7 +129,7 @@ describe("Dex Aggregator", () => {
       investor1Token2BalanceBeforeSwap = formatEther(
         await token2.balanceOf(investor1.address)
       );
-      formattedAmount = formatEther(amount);
+      formattedGiveAmount = formatEther(amount);
       transaction = await token1
         .connect(investor1)
         .approve(dexAggregator.address, amount);
@@ -160,9 +160,9 @@ describe("Dex Aggregator", () => {
       expect(args.tokenGetAmount).to.equal(amm2Token2ReturnAmount);
     });
     it("successfully swaps token1 for token2 ", async () => {
-      const tokenGetAmount = formatEther(result.events[6].args.tokenGetAmount);
+      const tokenGetAmount = formatEther(amm2Token2ReturnAmount);
       expect(Number(investor1Token1BalanceAfterSwap)).to.equal(
-        Number(investor1Token1BalanceBeforeSwap) - Number(formattedAmount)
+        Number(investor1Token1BalanceBeforeSwap) - Number(formattedGiveAmount)
       );
       expect(Number(investor1Token2BalanceAfterSwap)).to.equal(
         Number(investor1Token2BalanceBeforeSwap) + Number(tokenGetAmount)
