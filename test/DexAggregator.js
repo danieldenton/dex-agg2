@@ -5,6 +5,10 @@ const tokens = (n) => {
   return ethers.utils.parseUnits(n.toString(), "ether");
 };
 
+const format = (n) => {
+  return ethers.utils.formatUnits(n, "ether");
+};
+
 describe("Dex Aggregator", () => {
   let dexAggregator,
     amm1,
@@ -112,20 +116,22 @@ describe("Dex Aggregator", () => {
     });
   });
   describe("Performs Swaps", () => {
-    amount = tokens(5);
     // beforeEach(async () => {
-     
+
     //   const investor2Token2BalanceBeforeSwap = await token1.balanceOf(
     //     investor2.address
     //   );
     // });
     it("successfully swaps token1 for token2 ", async () => {
-      const investor1Token1BalanceBeforeSwap = await token1.balanceOf(
-        investor2.address
+      amount = tokens(5);
+      const investor1Token1BalanceBeforeSwap = tokens(
+        await token1.balanceOf(investor1.address)
       );
-      const investor1Token2BalanceBeforeSwap = await token2.balanceOf(
-        investor1.address
+
+      const investor1Token2BalanceBeforeSwap = tokens(
+        await token2.balanceOf(investor1.address)
       );
+      console.log(amount, investor1Token1BalanceBeforeSwap);
       transaction = await token1
         .connect(investor1)
         .approve(dexAggregator.address, amount);
@@ -134,15 +140,15 @@ describe("Dex Aggregator", () => {
         .connect(investor1)
         .swap(token1.address, token2.address, amount);
       await transaction.wait();
-      // const investor1Token1BalanceAfterSwap = await token1.balanceOf(
-      //   investor1.address
-      // );
-      // const investor1Token2BalanceAfterSwap = await token1.balanceOf(
-      //   investor1.address
-      // );
-      // expect(investor1Token1BalanceAfterSwap).to.equal(
-      //   investor1Token1BalanceBeforeSwap - amount
-      // );
+      const investor1Token1BalanceAfterSwap = tokens(
+        await token1.balanceOf(investor1.address)
+      );
+      const investor1Token2BalanceAfterSwap = tokens(
+        await token1.balanceOf(investor1.address)
+      );
+      expect(format(investor1Token1BalanceAfterSwap)).to.equal(
+        format(investor1Token1BalanceBeforeSwap) - format(amount)
+      );
       // expect(investor1Token2BalanceAfterSwap).to.equal(
       //   investor1Token2BalanceBeforeSwap + amount
       // );
