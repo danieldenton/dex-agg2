@@ -6,16 +6,12 @@ import "./Token.sol";
 import "./AMM.sol";
 
 contract DexAggregator {
-    Token public token1;
-    Token public token2;
     AMM public amm1;
     AMM public amm2;
 
     uint256 constant PRECISION = 10 ** 18;
 
-    constructor(Token _token1, Token _token2, AMM _amm1, AMM _amm2) {
-        token1 = _token1;
-        token2 = _token2;
+    constructor(AMM _amm1, AMM _amm2) {
         amm1 = _amm1;
         amm2 = _amm2;
     }
@@ -48,35 +44,36 @@ contract DexAggregator {
         }
     }
 
-    // function swap(
-    //     address _tokenAddress,
-    //     uint256 _amount
-    // ) public returns (bool success) {
-    //     AMM _amm;
-    //     Token _token;
-    //     (address chosenAMM, ) = ammSelector(_tokenAddress, _amount);
+    function swap(
+        address _tokenGiveAddress,
+        address _tokenGetAddress,
+        uint256 _amount
+    ) public returns (uint256 tokenGetAmount) {
+        AMM _amm;
+        IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
+        IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-    //     if (chosenAMM == address(amm1)) {
-    //         _amm = amm1;
-    //     } else {
-    //         _amm = amm2;
-    //     }
+        (address chosenAMM, ) = ammSelector(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amount
+        );
 
-    //     if (_tokenAddress == address(token1)) {
-    //         _token = token1;
-    //         _token.transferFrom(msg.sender, address(this), _amount);
-    //         _token.approve(address(_amm), _amount);
+        if (chosenAMM == address(amm1)) {
+            _amm = amm1;
+        } else {
+            _amm = amm2;
+        }
 
-    //         _amm.swapToken1(_amount);
-    //     } else {
-    //         _token = token2;
-    //     }
+        _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
+        _tokenGiveContract.approve(chosenAMM, _amount);
 
-        // require(
-        //     token1.balanceOf(msg.sender) >= _amount,
-        //     "insufficient funds"
-        // );
+        tokenGetAmount = _amm.swapToken(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amount
+        );
 
-    //     success = true;
-    // }
+        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+    }
 }

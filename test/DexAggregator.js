@@ -69,22 +69,11 @@ describe("Dex Aggregator", () => {
     await transaction.wait();
 
     const DEX_AGGREGATOR = await ethers.getContractFactory("DexAggregator");
-    dexAggregator = await DEX_AGGREGATOR.deploy(
-      token1.address,
-      token2.address,
-      amm1.address,
-      amm2.address
-    );
+    dexAggregator = await DEX_AGGREGATOR.deploy(amm1.address, amm2.address);
   });
   describe("Deployment", () => {
     it("has an address", async () => {
       expect(dexAggregator.address).to.not.equal(0x0);
-    });
-    it("returns token1", async () => {
-      expect(await dexAggregator.token1()).to.equal(token1.address);
-    });
-    it("returns token2", async () => {
-      expect(await dexAggregator.token2()).to.equal(token2.address);
     });
     it("returns amm1", async () => {
       expect(await dexAggregator.amm1()).to.equal(amm1.address);
@@ -122,38 +111,41 @@ describe("Dex Aggregator", () => {
       expect(cost).to.equal(amm2token1cost);
     });
   });
-  //   describe("Performs Swaps", () => {
-  //     amount = tokens(5);
-  //     beforeEach(async () => {
-  //       investor2Token1BalanceBeforeSwap = await token1.balanceOf(
-  //         investor2.address
-  //       );
-  //       investor2Token2BalanceBeforeSwap = await token1.balanceOf(
-  //         investor2.address
-  //       );
-  //     });
-  //     it("successfully swaps token1 ", async () => {
-  //       const investor1Token1BalanceBeforeSwap = await token1.balanceOf(
-  //         investor1.address
-  //       );
-  //       const investor1Token2BalanceBeforeSwap = await token1.balanceOf(
-  //         investor1.address
-  //       );
-  //       transaction = await token1
-  //         .connect(investor1)
-  //         .approve(dexAggregator.address, tokens(5));
-  //       await transaction.wait();
-  //       transaction = await dexAggregator
-  //         .connect(investor1)
-  //         .swap(token1.address, amount);
-  //       await transaction.wait();
-  //       //   const investor1Token1BalanceAfterSwap = await token1.balanceOf(
-  //       //     investor1.address
-  //       //   );
-  //       //   const investor1Token2BalanceAfterSwap = await token1.balanceOf(
-  //       //     investor1.address
-  //       //   );
-  //       //   console.log(amm1.address);
-  //     });
-  //   });
+  describe("Performs Swaps", () => {
+    amount = tokens(5);
+    // beforeEach(async () => {
+     
+    //   const investor2Token2BalanceBeforeSwap = await token1.balanceOf(
+    //     investor2.address
+    //   );
+    // });
+    it("successfully swaps token1 for token2 ", async () => {
+      const investor1Token1BalanceBeforeSwap = await token1.balanceOf(
+        investor2.address
+      );
+      const investor1Token2BalanceBeforeSwap = await token2.balanceOf(
+        investor1.address
+      );
+      transaction = await token1
+        .connect(investor1)
+        .approve(dexAggregator.address, amount);
+      await transaction.wait();
+      transaction = await dexAggregator
+        .connect(investor1)
+        .swap(token1.address, token2.address, amount);
+      await transaction.wait();
+      // const investor1Token1BalanceAfterSwap = await token1.balanceOf(
+      //   investor1.address
+      // );
+      // const investor1Token2BalanceAfterSwap = await token1.balanceOf(
+      //   investor1.address
+      // );
+      // expect(investor1Token1BalanceAfterSwap).to.equal(
+      //   investor1Token1BalanceBeforeSwap - amount
+      // );
+      // expect(investor1Token2BalanceAfterSwap).to.equal(
+      //   investor1Token2BalanceBeforeSwap + amount
+      // );
+    });
+  });
 });
