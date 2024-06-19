@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./Token.sol";
 import "./AMM.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract DexAggregator {
     AMM public amm1;
@@ -78,6 +79,8 @@ contract DexAggregator {
 
         _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
         _tokenGiveContract.approve(chosenAMM, _amount);
+        _approve(msg.sender, chosenAMM, _amount)
+        
 
         tokenGetAmount = _amm.swapToken(
             _tokenGiveAddress,
