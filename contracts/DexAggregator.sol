@@ -16,31 +16,42 @@ contract DexAggregator {
         amm2 = _amm2;
     }
 
+    event Swap(
+        address from,
+        address to,
+        address amm,
+        address tokenGive,
+        uint256 tokenGiveAmount,
+        address tokenGet,
+        uint256 tokenGetAmount,
+        uint256 timestamp
+    );
+
     function ammSelector(
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public view returns (address chosenAMM, uint256 cost) {
-        uint256 amm1Cost;
-        uint256 amm2Cost;
+    ) public view returns (address chosenAMM, uint256 returnAmount) {
+        uint256 amm1Return;
+        uint256 amm2Return;
 
-        amm1Cost = amm1.calculateTokenSwap(
+        amm1Return = amm1.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
         );
-        amm2Cost = amm2.calculateTokenSwap(
+        amm2Return = amm2.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
         );
 
-        if (amm1Cost < amm2Cost) {
+        if (amm1Return > amm2Return) {
             chosenAMM = address(amm1);
-            cost = amm1Cost;
+            returnAmount = amm1Return;
         } else {
             chosenAMM = address(amm2);
-            cost = amm2Cost;
+            returnAmount = amm2Return;
         }
     }
 
@@ -75,5 +86,16 @@ contract DexAggregator {
         );
 
         _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+
+        emit Swap(
+        msg.sender,
+        address(this),
+        chosenAMM,
+        _tokenGiveAddress,
+        _amount,
+        _tokenGetAddress,
+        tokenGetAmount,
+        block.timestamp
+    );
     }
 }
