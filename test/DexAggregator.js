@@ -76,7 +76,7 @@ describe("Dex Aggregator", () => {
     dexAggregator = await DEX_AGGREGATOR.deploy(amm1.address, amm2.address);
 
     // first DEX_AGGREGATOR function call
-    amount = tokens(1);
+    amount = tokens(4);
     amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
       token2.address,
