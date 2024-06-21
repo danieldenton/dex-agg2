@@ -129,6 +129,7 @@ contract AMM {
     }
 
     function swapToken(
+        address swapper,
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
@@ -147,10 +148,10 @@ contract AMM {
             _tokenGetAddress,
             _amount
         );
-        _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
+        _tokenGiveContract.transferFrom(swapper, address(this), _amount);
         tokenGiveContractBalance += _amount;
         tokenGetContractBalance -= tokenGetAmount;
-        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+        _tokenGetContract.transfer(swapper, tokenGetAmount);
 
         emit Swap(
             msg.sender,
