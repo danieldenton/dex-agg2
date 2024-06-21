@@ -10,8 +10,6 @@ contract DexAggregator {
     AMM public amm1;
     AMM public amm2;
 
-    uint256 constant PRECISION = 10 ** 18;
-
     constructor(AMM _amm1, AMM _amm2) {
         amm1 = _amm1;
         amm2 = _amm2;
@@ -62,8 +60,8 @@ contract DexAggregator {
         uint256 _amount
     ) public returns (uint256 tokenGetAmount) {
         AMM _amm;
-        IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
-        IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
+        // IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
+        // IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
         (address chosenAMM, ) = ammSelector(
             _tokenGiveAddress,

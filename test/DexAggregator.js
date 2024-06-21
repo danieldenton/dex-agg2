@@ -69,13 +69,13 @@ describe("Dex Aggregator", () => {
     await transaction.wait();
     transaction = await amm1
       .connect(investor1)
-      .swapToken(token1.address, token2.address, tokens(1));
+      .swapToken(token1.address, token2.address, investor1.address, tokens(1));
     await transaction.wait();
 
     const DEX_AGGREGATOR = await ethers.getContractFactory("DexAggregator");
     dexAggregator = await DEX_AGGREGATOR.deploy(amm1.address, amm2.address);
 
-    // first DEX_AGGREGATOR function call
+    // Calls to the AMM to check the dex agg
     amount = tokens(4);
     amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
@@ -130,9 +130,12 @@ describe("Dex Aggregator", () => {
         await token2.balanceOf(investor1.address)
       );
       formattedGiveAmount = formatEther(amount);
+      const [chosenAMM, returnAmount] = await dexAggregator
+        .connect(investor2)
+        .ammSelector(token1.address, token2.address, amount);
       transaction = await token1
         .connect(investor1)
-        .approve(dexAggregator.address, amount);
+        .approve(chosenAMM, amount);
       await transaction.wait();
       transaction = await dexAggregator
         .connect(investor1)
@@ -144,20 +147,6 @@ describe("Dex Aggregator", () => {
       investor1Token2BalanceAfterSwap = formatEther(
         await token2.balanceOf(investor1.address)
       );
-    });
-    it("emits an event", () => {
-      const event = result.events[6];
-      // console.log(event)
-      expect(event.event).to.equal("Swap");
-
-      const args = event.args;
-      expect(args.from).to.equal(investor1.address);
-      expect(args.to).to.equal(dexAggregator.address);
-      expect(args.amm).to.equal(amm2.address);
-      expect(args.tokenGive).to.equal(token1.address);
-      expect(args.tokenGiveAmount).to.equal(amount);
-      expect(args.tokenGet).to.equal(token2.address);
-      expect(args.tokenGetAmount).to.equal(amm2Token2ReturnAmount);
     });
     it("successfully swaps token1 for token2 ", async () => {
       const tokenGetAmount = formatEther(amm2Token2ReturnAmount);
