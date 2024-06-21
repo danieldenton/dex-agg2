@@ -50,7 +50,7 @@ contract AMM {
     }
 
 
-    //What does the original liquididty base it's prioce on?
+    //What does the original liquididty base it's price on?
     function addLiquidity(
         uint256 _token1Amount,
         uint256 _token2Amount
