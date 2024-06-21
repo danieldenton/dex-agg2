@@ -4,8 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./Token.sol";
 import "./AMM.sol";
-// import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-// open zeppelin imported. delete it if you don't need it.
+
 contract DexAggregator {
     AMM public amm1;
     AMM public amm2;
@@ -60,8 +59,6 @@ contract DexAggregator {
         uint256 _amount
     ) public returns (uint256 tokenGetAmount) {
         AMM _amm;
-        // IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
-        // IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
         (address chosenAMM, ) = ammSelector(
             _tokenGiveAddress,
@@ -75,19 +72,12 @@ contract DexAggregator {
             _amm = amm2;
         }
 
-        // _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
-        // _tokenGiveContract.approve(chosenAMM, _amount);
-        // _approve(msg.sender, chosenAMM, _amount)
-        
-
         tokenGetAmount = _amm.swapToken(
             _tokenGiveAddress,
             _tokenGetAddress,
             msg.sender,
             _amount
         );
-
-        // _tokenGetContract.transfer(msg.sender, tokenGetAmount);
 
     }
 }

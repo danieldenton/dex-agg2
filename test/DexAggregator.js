@@ -130,7 +130,7 @@ describe("Dex Aggregator", () => {
         await token2.balanceOf(investor1.address)
       );
       formattedGiveAmount = formatEther(amount);
-      const [chosenAMM, returnAmount] = await dexAggregator
+      const [chosenAMM, ] = await dexAggregator
         .connect(investor2)
         .ammSelector(token1.address, token2.address, amount);
       transaction = await token1
