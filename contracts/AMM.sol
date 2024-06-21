@@ -34,7 +34,8 @@ contract AMM {
     uint256 constant PRECISION = 10 ** 18;
 
     event Swap(
-        address user,
+        address swapCaller,
+        address recipient,
         address tokenGive,
         uint256 tokenGiveAmount,
         address tokenGet,
@@ -131,9 +132,9 @@ contract AMM {
     }
 
     function swapToken(
-        address swapper,
         address _tokenGiveAddress,
         address _tokenGetAddress,
+        address recipient,
         uint256 _amount
     ) external returns (uint256 tokenGetAmount) {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
@@ -150,13 +151,14 @@ contract AMM {
             _tokenGetAddress,
             _amount
         );
-        _tokenGiveContract.transferFrom(swapper, address(this), _amount);
+        _tokenGiveContract.transferFrom(recipient, address(this), _amount);
         tokenGiveContractBalance += _amount;
         tokenGetContractBalance -= tokenGetAmount;
-        _tokenGetContract.transfer(swapper, tokenGetAmount);
+        _tokenGetContract.transfer(recipient, tokenGetAmount);
 
         emit Swap(
             msg.sender,
+            recipient,
             _tokenGiveAddress,
             _amount,
             _tokenGetAddress,

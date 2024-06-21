@@ -77,29 +77,19 @@ contract DexAggregator {
             _amm = amm2;
         }
 
-        _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
-        _tokenGiveContract.approve(chosenAMM, _amount);
+        // _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
+        // _tokenGiveContract.approve(chosenAMM, _amount);
         // _approve(msg.sender, chosenAMM, _amount)
         
 
         tokenGetAmount = _amm.swapToken(
-            msg.sender,
             _tokenGiveAddress,
             _tokenGetAddress,
+            msg.sender,
             _amount
         );
 
-        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+        // _tokenGetContract.transfer(msg.sender, tokenGetAmount);
 
-        emit Swap(
-        msg.sender,
-        address(this),
-        chosenAMM,
-        _tokenGiveAddress,
-        _amount,
-        _tokenGetAddress,
-        tokenGetAmount,
-        block.timestamp
-    );
     }
 }
