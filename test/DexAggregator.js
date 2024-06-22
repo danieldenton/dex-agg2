@@ -139,7 +139,7 @@ describe("Dex Aggregator", () => {
       transaction = await dexAggregator
         .connect(investor1)
         .swap(token1.address, token2.address, amount);
-      result = await transaction.wait();
+      await transaction.wait();
       const investor1Token1BalanceAfterSwap = formatEther(
         await token1.balanceOf(investor1.address)
       );
@@ -171,7 +171,7 @@ describe("Dex Aggregator", () => {
       transaction = await dexAggregator
         .connect(investor2)
         .swap(token2.address, token1.address, amount);
-      result = await transaction.wait();
+     await transaction.wait();
       const investor2Token1BalanceAfterSwap = formatEther(
         await token1.balanceOf(investor2.address)
       );
@@ -179,11 +179,11 @@ describe("Dex Aggregator", () => {
         await token2.balanceOf(investor2.address)
       );
       const tokenGetAmount = formatEther(amm1Token1ReturnAmount);
-      expect(Number(investor2Token1BalanceAfterSwap)).to.equal(
-        Number(investor2Token1BalanceBeforeSwap) - Number(formattedGiveAmount)
-      );
       expect(Number(investor2Token2BalanceAfterSwap)).to.equal(
-        Number(investor2Token2BalanceBeforeSwap) + Number(tokenGetAmount)
+        Number(investor2Token2BalanceBeforeSwap) - Number(formattedGiveAmount)
+      );
+      expect(Number(investor2Token1BalanceAfterSwap)).to.equal(
+        Number(investor2Token1BalanceBeforeSwap) + Number(tokenGetAmount)
       );
     });
   });
