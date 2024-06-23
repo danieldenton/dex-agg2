@@ -61,10 +61,10 @@ describe("AMM", () => {
       expect(await amm.token2()).to.equal(token2.address);
     });
   });
-  describe("Receives Liquidity and Distribues Shares", () => {
-    let k = tokens(100000).toBigInt() * tokens(100000).toBigInt();
+  describe("Receives Liquidity and Distributes Shares", () => {
+    amount = tokens(100000);
+    let k = amount.toBigInt() * amount.toBigInt();
     beforeEach(async () => {
-      amount = tokens(100000);
       transaction = await token1.connect(deployer).approve(amm.address, amount);
       await transaction.wait();
       transaction = await token2.connect(deployer).approve(amm.address, amount);
@@ -72,6 +72,7 @@ describe("AMM", () => {
       transaction = await amm.connect(deployer).addLiquidity(amount, amount);
       await transaction.wait();
     });
+    it
     it("receives liquidity", async () => {
       expect(await token1.balanceOf(amm.address)).to.equal(amount);
       expect(await token2.balanceOf(amm.address)).to.equal(amount);
