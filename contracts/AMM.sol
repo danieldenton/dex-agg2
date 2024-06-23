@@ -50,7 +50,6 @@ contract AMM {
         token2 = _token2;
     }
 
-
     //What does the original liquididty base it's price on?
     function addLiquidity(
         uint256 _token1Amount,
@@ -90,17 +89,23 @@ contract AMM {
         shares[msg.sender] += share;
     }
 
-    function calculateToken2Deposit(
-        uint256 _token1Amount
+    function calculateTokenDeposit(
+        address _token1Address,
+        uint256 _token1Amount,
+        address _token2Address
     ) public view returns (uint256 token2Amount) {
-        token2Amount = (token2Balance * _token1Amount) / token1Balance;
+        IERC20 _token1Contract = IERC20(_token1Address);
+        IERC20 _token2Contract = IERC20(_token2Address);
+        uint256 _token1Balance = _token1Contract.balanceOf(address(this));
+        uint256 _token2Balance = _token2Contract.balanceOf(address(this));
+        token2Amount = (_token2Balance * _token1Amount) / _token1Balance;
     }
 
-    function calculateToken1Deposit(
-        uint256 _token2Amount
-    ) public view returns (uint256 token1Amount) {
-        token1Amount = (token1Balance * _token2Amount) / token2Balance;
-    }
+    // function calculateToken1Deposit(
+    //     uint256 _token2Amount
+    // ) public view returns (uint256 token1Amount) {
+    //     token1Amount = (token1Balance * _token2Amount) / token2Balance;
+    // }
 
     function calculateTokenSwap(
         address _tokenGiveAddress,

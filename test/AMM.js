@@ -94,15 +94,15 @@ describe("AMM", () => {
   //
   //
 
-  //       amount = tokens(50000);
-  //       transaction = await token1
-  //         .connect(liquidityProvider)
-  //         .approve(amm.address, amount);
-  //       await transaction.wait();
-  //       transaction = await token2
-  //         .connect(liquidityProvider)
-  //         .approve(amm.address, amount);
-  //       await transaction.wait();
+        // amount = tokens(50000);
+        // transaction = await token1
+        //   .connect(liquidityProvider)
+        //   .approve(amm.address, amount);
+        // await transaction.wait();
+        // transaction = await token2
+        //   .connect(liquidityProvider)
+        //   .approve(amm.address, amount);
+        // await transaction.wait();
 
   //       let token2Deposit = await amm.calculateToken2Deposit(amount);
   //       transaction = await amm
