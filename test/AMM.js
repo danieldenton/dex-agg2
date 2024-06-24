@@ -17,7 +17,9 @@ describe("AMM", () => {
     token2,
     liquidityProvider,
     investor1,
-    investor2;
+    investor2,
+    balance,
+    estimate;
 
   beforeEach(async () => {
     accounts = await ethers.getSigners();
@@ -72,7 +74,7 @@ describe("AMM", () => {
       transaction = await amm.connect(deployer).addLiquidity(amount, amount);
       await transaction.wait();
     });
-    it
+    it;
     it("receives liquidity", async () => {
       expect(await token1.balanceOf(amm.address)).to.equal(amount);
       expect(await token2.balanceOf(amm.address)).to.equal(amount);
@@ -86,32 +88,48 @@ describe("AMM", () => {
     it("updates total shares", async () => {
       expect(await amm.totalShares()).to.equal(tokens(100));
     });
+    it("calculates _token2 for deposit", async () => {
+      amount = tokens(50000);
+      transaction = await token1
+        .connect(liquidityProvider)
+        .approve(amm.address, amount);
+      await transaction.wait();
+      transaction = await token2
+        .connect(liquidityProvider)
+        .approve(amm.address, amount);
+      await transaction.wait();
+
+      let token2Deposit = await amm.calculateTokenDeposit(
+        token1.address,
+        amount,
+        token2.address
+      );
+      transaction = await amm
+        .connect(liquidityProvider)
+        .addLiquidity(amount, token2Deposit);
+      await transaction.wait();
+      expect(await amm.shares(liquidityProvider.address)).to.equal(tokens(50));
+      expect(await amm.shares(deployer.address)).to.equal(tokens(100));
+      expect(await amm.totalShares()).to.equal(tokens(150));
+    });
   });
+  describe("Swaps tokens", () => {
+    it("swaps tokens", async () ={
+
+    })
+    it("emits a Swap event", async () => {
+
+    })
+  });
+  describe("Removes Liquidity and Updates Shares", () => {
+    
+  })
   //   describe("Swapping Tokens", () => {
   //     let amount, estimate, balance;
   //     it("facilitates swaps", async () => {
   //
   //
   //
-
-        // amount = tokens(50000);
-        // transaction = await token1
-        //   .connect(liquidityProvider)
-        //   .approve(amm.address, amount);
-        // await transaction.wait();
-        // transaction = await token2
-        //   .connect(liquidityProvider)
-        //   .approve(amm.address, amount);
-        // await transaction.wait();
-
-  //       let token2Deposit = await amm.calculateToken2Deposit(amount);
-  //       transaction = await amm
-  //         .connect(liquidityProvider)
-  //         .addLiquidity(amount, token2Deposit);
-  //       await transaction.wait();
-  //       expect(await amm.shares(liquidityProvider.address)).to.equal(tokens(50));
-  //       expect(await amm.shares(deployer.address)).to.equal(tokens(100));
-  //       expect(await amm.totalShares()).to.equal(tokens(150));
 
   //       console.log((await amm.token2Balance()) / (await amm.token1Balance()));
 
