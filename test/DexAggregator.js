@@ -78,6 +78,7 @@ describe("Dex Aggregator", () => {
 
     // Calls to the AMM to check the dex agg
     amount = tokens(4);
+    console.log(amount)
     amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
       token2.address,

@@ -17,9 +17,7 @@ describe("AMM", () => {
     token2,
     liquidityProvider,
     investor1,
-    investor2,
-    balance,
-    estimate;
+    investor2;
 
   beforeEach(async () => {
     accounts = await ethers.getSigners();
@@ -74,7 +72,6 @@ describe("AMM", () => {
       transaction = await amm.connect(deployer).addLiquidity(amount, amount);
       await transaction.wait();
     });
-    it;
     it("receives liquidity", async () => {
       expect(await token1.balanceOf(amm.address)).to.equal(amount);
       expect(await token2.balanceOf(amm.address)).to.equal(amount);
@@ -114,155 +111,154 @@ describe("AMM", () => {
     });
   });
   describe("Swaps tokens", () => {
-    it("swaps tokens", async () ={
+    let estimate, balance;
+    beforeEach(async () => {
+      transaction = await token1
+        .connect(investor1)
+        .approve(amm.address, tokens(100000));
+      await transaction.wait();
 
-    })
-    it("emits a Swap event", async () => {
-
-    })
+      // balance = await token2.balanceOf(investor1.address);å
+      amount = tokens(1);
+      estimate = await amm.calculateTokenSwap(token1.address, token2.address, amount);
+    });
+    it("swaps tokens", async () => {});
+    // it("emits a Swap event", async () => {});
   });
-  describe("Removes Liquidity and Updates Shares", () => {
-    
-  })
-  //   describe("Swapping Tokens", () => {
-  //     let amount, estimate, balance;
-  //     it("facilitates swaps", async () => {
-  //
-  //
-  //
 
-  //       console.log((await amm.token2Balance()) / (await amm.token1Balance()));
-
-  //       transaction = await token1
-  //         .connect(investor1)
-  //         .approve(amm.address, tokens(100000));
-  //       await transaction.wait();
-
-  //       balance = await token2.balanceOf(investor1.address);
-
-  //       estimate = await amm.calculateToken1Swap(tokens(1));
-
-  //       transaction = await amm.connect(investor1).swapToken1(tokens(1));
-  //       await transaction.wait();
-
-  //       await expect(transaction)
-  //         .to.emit(amm, "Swap")
-  //         .withArgs(
-  //           investor1.address,
-  //           token1.address,
-  //           tokens(1),
-  //           token2.address,
-  //           estimate,
-  //           await amm.token1Balance(),
-  //           await amm.token2Balance(),
-  //           (
-  //             await ethers.provider.getBlock(
-  //               await ethers.provider.getBlockNumber()
-  //             )
-  //           ).timestamp
-  //         );
-
-  //       balance = await token2.balanceOf(investor1.address);
-  //       expect(estimate).to.equal(balance);
-
-  //       expect(await token1.balanceOf(amm.address)).to.equal(
-  //         await amm.token1Balance()
-  //       );
-  //       expect(await token2.balanceOf(amm.address)).to.equal(
-  //         await amm.token2Balance()
-  //       );
-
-  //       console.log((await amm.token2Balance()) / (await amm.token1Balance()));
-
-  //       balance = await token2.balanceOf(investor1.address);
-
-  //       estimate = await amm.calculateToken1Swap(tokens(1));
-
-  //       transaction = await amm.connect(investor1).swapToken1(tokens(1));
-  //       await transaction.wait();
-
-  //       balance = await token2.balanceOf(investor1.address);
-  //       console.log(balance);
-
-  //       transaction = await token2
-  //         .connect(investor2)
-  //         .approve(amm.address, tokens(10000));
-  //       await transaction.wait();
-
-  //       balance = await token1.balanceOf(investor2.address);
-  //       console.log(balance);
-
-  //       estimate = await amm.calculateToken2Swap(tokens(1));
-  //       console.log(estimate);
-
-  //       transaction = await amm.connect(investor2).swapToken2(tokens(1));
-  //       await transaction.wait();
-
-  //       await expect(transaction)
-  //         .to.emit(amm, "Swap")
-  //         .withArgs(
-  //           investor2.address,
-  //           token2.address,
-  //           tokens(1),
-  //           token1.address,
-  //           estimate,
-  //           await amm.token1Balance(),
-  //           await amm.token2Balance(),
-  //           (
-  //             await ethers.provider.getBlock(
-  //               await ethers.provider.getBlockNumber()
-  //             )
-  //           ).timestamp
-  //         );
-
-  //       //   Removing Liquidity
-
-  //       console.log(
-  //         `token 1 balance: ${ethers.utils.formatEther(
-  //           await amm.token1Balance()
-  //         )}`
-  //       );
-  //       console.log(
-  //         `token 2 balance: ${ethers.utils.formatEther(
-  //           await amm.token2Balance()
-  //         )}`
-  //       );
-
-  //       balance = await token1.balanceOf(liquidityProvider.address);
-  //       console.log(
-  //         `liquidity provider's token 1 balance before removing funds: ${ethers.utils.formatEther(
-  //           balance
-  //         )}`
-  //       );
-
-  //       balance = await token2.balanceOf(liquidityProvider.address);
-  //       console.log(
-  //         `liquidity provider's token 2 balance before removing funds: ${ethers.utils.formatEther(
-  //           balance
-  //         )}`
-  //       );
-
-  //       transaction = await amm
-  //         .connect(liquidityProvider)
-  //         .removeLiquidity(shares(50));
-  //       await transaction.wait();
-
-  //       balance = await token1.balanceOf(liquidityProvider.address);
-  //       console.log(
-  //         `liquidity provider's token 1 balance after removing funds: ${ethers.utils.formatEther(
-  //           balance
-  //         )}`
-  //       );
-  //       balance = await token2.balanceOf(liquidityProvider.address);
-  //       console.log(
-  //         `liquidity provider's token 2 balance after removing funds: ${ethers.utils.formatEther(
-  //           balance
-  //         )}`
-  //       );
-
-  //       expect(await amm.shares(liquidityProvider.address)).to.equal(0);
-  //       expect(await amm.shares(deployer.address)).to.equal(shares(100));
-  //       expect(await amm.totalShares()).to.equal(shares(100));
-  //     });
-  //   });
+  describe("Removes Liquidity and Updates Shares", () => {});
 });
+
+//   describe("Swapping Tokens", () => {
+//     let amount, estimate, balance;
+//     it("facilitates swaps", async () => {
+//
+//
+//
+
+//       console.log((await amm.token2Balance()) / (await amm.token1Balance()));
+
+//
+//       transaction = await amm.connect(investor1).swapToken1(tokens(1));
+//       await transaction.wait();
+
+//       await expect(transaction)
+//         .to.emit(amm, "Swap")
+//         .withArgs(
+//           investor1.address,
+//           token1.address,
+//           tokens(1),
+//           token2.address,
+//           estimate,
+//           await amm.token1Balance(),
+//           await amm.token2Balance(),
+//           (
+//             await ethers.provider.getBlock(
+//               await ethers.provider.getBlockNumber()
+//             )
+//           ).timestamp
+//         );
+
+//       balance = await token2.balanceOf(investor1.address);
+//       expect(estimate).to.equal(balance);
+
+//       expect(await token1.balanceOf(amm.address)).to.equal(
+//         await amm.token1Balance()
+//       );
+//       expect(await token2.balanceOf(amm.address)).to.equal(
+//         await amm.token2Balance()
+//       );
+
+//       console.log((await amm.token2Balance()) / (await amm.token1Balance()));
+
+//       balance = await token2.balanceOf(investor1.address);
+
+//       estimate = await amm.calculateToken1Swap(tokens(1));
+
+//       transaction = await amm.connect(investor1).swapToken1(tokens(1));
+//       await transaction.wait();
+
+//       balance = await token2.balanceOf(investor1.address);
+//       console.log(balance);
+
+//       transaction = await token2
+//         .connect(investor2)
+//         .approve(amm.address, tokens(10000));
+//       await transaction.wait();
+
+//       balance = await token1.balanceOf(investor2.address);
+//       console.log(balance);
+
+//       estimate = await amm.calculateToken2Swap(tokens(1));
+//       console.log(estimate);
+
+//       transaction = await amm.connect(investor2).swapToken2(tokens(1));
+//       await transaction.wait();
+
+//       await expect(transaction)
+//         .to.emit(amm, "Swap")
+//         .withArgs(
+//           investor2.address,
+//           token2.address,
+//           tokens(1),
+//           token1.address,
+//           estimate,
+//           await amm.token1Balance(),
+//           await amm.token2Balance(),
+//           (
+//             await ethers.provider.getBlock(
+//               await ethers.provider.getBlockNumber()
+//             )
+//           ).timestamp
+//         );
+
+//       //   Removing Liquidity
+
+//       console.log(
+//         `token 1 balance: ${ethers.utils.formatEther(
+//           await amm.token1Balance()
+//         )}`
+//       );
+//       console.log(
+//         `token 2 balance: ${ethers.utils.formatEther(
+//           await amm.token2Balance()
+//         )}`
+//       );
+
+//       balance = await token1.balanceOf(liquidityProvider.address);
+//       console.log(
+//         `liquidity provider's token 1 balance before removing funds: ${ethers.utils.formatEther(
+//           balance
+//         )}`
+//       );
+
+//       balance = await token2.balanceOf(liquidityProvider.address);
+//       console.log(
+//         `liquidity provider's token 2 balance before removing funds: ${ethers.utils.formatEther(
+//           balance
+//         )}`
+//       );
+
+//       transaction = await amm
+//         .connect(liquidityProvider)
+//         .removeLiquidity(shares(50));
+//       await transaction.wait();
+
+//       balance = await token1.balanceOf(liquidityProvider.address);
+//       console.log(
+//         `liquidity provider's token 1 balance after removing funds: ${ethers.utils.formatEther(
+//           balance
+//         )}`
+//       );
+//       balance = await token2.balanceOf(liquidityProvider.address);
+//       console.log(
+//         `liquidity provider's token 2 balance after removing funds: ${ethers.utils.formatEther(
+//           balance
+//         )}`
+//       );
+
+//       expect(await amm.shares(liquidityProvider.address)).to.equal(0);
+//       expect(await amm.shares(deployer.address)).to.equal(shares(100));
+//       expect(await amm.totalShares()).to.equal(shares(100));
+//     });
+//   });

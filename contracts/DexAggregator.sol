@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-import "./Token.sol";
 import "./AMM.sol";
 
 contract DexAggregator {
@@ -59,6 +58,8 @@ contract DexAggregator {
         uint256 _amount
     ) public returns (uint256 tokenGetAmount) {
         AMM _amm;
+        IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
+        IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
         (address chosenAMM, ) = ammSelector(
             _tokenGiveAddress,
@@ -75,7 +76,6 @@ contract DexAggregator {
         tokenGetAmount = _amm.swapToken(
             _tokenGiveAddress,
             _tokenGetAddress,
-            msg.sender,
             _amount
         );
 
