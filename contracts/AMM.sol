@@ -100,10 +100,9 @@ contract AMM {
         token2Amount = (_token2Balance * _token1Amount) / _token1Balance;
     }
 
-    // function calculateToken1Deposit(
-    //     uint256 _token2Amount
-    // ) public view returns (uint256 token1Amount) {
-    //     token1Amount = (token1Balance * _token2Amount) / token2Balance;
+    // function calculateFee(uint256 _amount) public pure returns (uint256 fee) {
+    //     fee = (_amount * 15) / 1000;
+    //     // 1.5% fee
     // }
 
     function calculateTokenSwap(

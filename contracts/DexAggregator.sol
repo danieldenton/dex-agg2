@@ -9,9 +9,6 @@ contract DexAggregator {
     AMM public amm1;
     AMM public amm2;
     mapping(address => uint) public tokenBalances;
-    // 1.5% fee
-    uint256 public constant feeMultiplier = 15;
-    uint256 public constant feeDenominator = 1000;
 
     constructor(AMM _amm1, AMM _amm2) {
         owner = msg.sender;
@@ -37,6 +34,11 @@ contract DexAggregator {
         uint256 timestamp
     );
 
+    function calculateFee(uint256 _amount) public pure returns (uint256 fee) {
+        fee = (_amount * 15) / 1000;
+        // 1.5% fee
+    }
+
     function ammSelector(
         address _tokenGiveAddress,
         address _tokenGetAddress,
@@ -45,15 +47,18 @@ contract DexAggregator {
         uint256 amm1Return;
         uint256 amm2Return;
 
+        uint256 _fee = calculateFee(_amount);
+        uint256 _amountAfterFee = _amount - _fee;
+
         amm1Return = amm1.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
-            _amount
+            _amountAfterFee
         );
         amm2Return = amm2.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
-            _amount
+            _amountAfterFee
         );
 
         if (amm1Return > amm2Return) {
@@ -93,16 +98,16 @@ contract DexAggregator {
 
         _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
 
-        uint256 fee = (_amount * feeMultiplier) / feeDenominator;
-        uint256 amountAfterFee = _amount - fee;
-        tokenBalances[_tokenGiveAddress] += fee;
+        uint256 _fee = calculateFee(_amount);
+        uint256 _amountAfterFee = _amount - _fee;
+        tokenBalances[_tokenGiveAddress] += _fee;
 
-        _tokenGiveContract.approve(address(_amm), amountAfterFee);
+        _tokenGiveContract.approve(address(_amm), _amountAfterFee);
 
         tokenGetAmount = _amm.swapToken(
             _tokenGiveAddress,
             _tokenGetAddress,
-            amountAfterFee
+            _amountAfterFee
         );
 
         _tokenGetContract.transfer(msg.sender, tokenGetAmount);
@@ -132,7 +137,6 @@ contract DexAggregator {
 
         _tokenContract.transfer(owner, amountToWithdraw);
         tokenBalances[_tokenToWithdraw] = 0;
-
         success = true;
 
         emit Withdrawal(
