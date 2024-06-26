@@ -5,7 +5,7 @@ import "hardhat/console.sol";
 import "./AMM.sol";
 
 contract DexAggregator {
-    address owner;
+    address public owner;
     AMM public amm1;
     AMM public amm2;
     mapping(address => uint) public tokenBalances;
@@ -34,9 +34,11 @@ contract DexAggregator {
         uint256 timestamp
     );
 
-    function calculateFee(uint256 _amount) public pure returns (uint256 fee) {
-        fee = (_amount * 15) / 1000;
-        // 1.5% fee
+    function separateFee(
+        uint256 _amount
+    ) public pure returns (uint256 amountAfterFee, uint256 fee) {
+        fee = (_amount * 15) / 1000; // 1.5% fee
+        amountAfterFee = _amount - fee;
     }
 
     function ammSelector(
@@ -47,8 +49,7 @@ contract DexAggregator {
         uint256 amm1Return;
         uint256 amm2Return;
 
-        uint256 _fee = calculateFee(_amount);
-        uint256 _amountAfterFee = _amount - _fee;
+        (uint256 _amountAfterFee, ) = separateFee(_amount);
 
         amm1Return = amm1.calculateTokenSwap(
             _tokenGiveAddress,
@@ -98,8 +99,8 @@ contract DexAggregator {
 
         _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
 
-        uint256 _fee = calculateFee(_amount);
-        uint256 _amountAfterFee = _amount - _fee;
+        (uint256 _amountAfterFee, uint256 _fee) = separateFee(_amount);
+
         tokenBalances[_tokenGiveAddress] += _fee;
 
         _tokenGiveContract.approve(address(_amm), _amountAfterFee);
