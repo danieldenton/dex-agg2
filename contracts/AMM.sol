@@ -120,6 +120,11 @@ contract AMM {
             address(this)
         );
 
+        require(
+            tokenGiveContractBalance > 0 && tokenGetContractBalance > 0,
+            "Insufficient liquidity to trade this pair"
+        );
+
         uint256 tokenGiveContractAfter = tokenGiveContractBalance + _amount;
         uint tokenGetContractAfter = K / tokenGiveContractAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractAfter;
@@ -130,7 +135,7 @@ contract AMM {
 
         require(
             tokenGetAmount < tokenGetContractBalance,
-            "cannot exceed pool balance"
+            "Cannot exceed pool balance"
         );
     }
 

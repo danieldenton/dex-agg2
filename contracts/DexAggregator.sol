@@ -80,11 +80,6 @@ contract DexAggregator {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        require(
-            _amount <= _tokenGiveContract.balanceOf(msg.sender),
-            "Insufficient funds"
-        );
-
         (address chosenAMM, ) = ammSelector(
             _tokenGiveAddress,
             _tokenGetAddress,

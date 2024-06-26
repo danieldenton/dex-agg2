@@ -111,19 +111,91 @@ describe("AMM", () => {
     });
   });
   describe("Swaps tokens", () => {
-    let estimate, balance;
-    beforeEach(async () => {
-      transaction = await token1
-        .connect(investor1)
-        .approve(amm.address, tokens(100000));
-      await transaction.wait();
+    let estimate,
+      balanceOfInvestor1Token1BeforeSwap,
+      balanceOfInvestor1Token2BeforeSwap;
+    describe("Success", () => {
+      beforeEach(async () => {
+        amount = tokens(5000);
+        transaction = await token1
+          .connect(deployer)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await token2
+          .connect(deployer)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await amm.connect(deployer).addLiquidity(amount, amount);
+        await transaction.wait();
+        amount = tokens(1);
+        transaction = await token1
+          .connect(investor1)
+          .approve(amm.address, amount);
+        await transaction.wait();
 
-      // balance = await token2.balanceOf(investor1.address);å
-      amount = tokens(1);
-      estimate = await amm.calculateTokenSwap(token1.address, token2.address, amount);
+        balanceOfInvestor1Token1BeforeSwap = await token1.balanceOf(
+          investor1.address
+        );
+        balanceOfInvestor1Token2BeforeSwap = await token2.balanceOf(
+          investor1.address
+        );
+
+        estimate = await amm.calculateTokenSwap(
+          token1.address,
+          token2.address,
+          amount
+        );
+
+        transaction = await amm
+          .connect(investor1)
+          .swapToken(token1.address, token2.address, amount);
+        await transaction.wait();
+      });
+      it("swaps tokens", async () => {
+        const balanceOfInvestor1Token1AfterSwap = await token1.balanceOf(
+          investor1.address
+        );
+        const balanceOfInvestor1Token2AfterSwap = await token2.balanceOf(
+          investor1.address
+        );
+        expect(Number(balanceOfInvestor1Token1AfterSwap)).to.equal(
+          Number(balanceOfInvestor1Token1BeforeSwap) - Number(amount)
+        );
+        expect(Number(balanceOfInvestor1Token2AfterSwap)).to.equal(
+          Number(balanceOfInvestor1Token2BeforeSwap) + Number(estimate)
+        );
+      });
+      it("emits a Swap event", async () => {
+        await expect(transaction)
+          .to.emit(amm, "Swap")
+          .withArgs(
+            investor1.address,
+            token1.address,
+            amount,
+            token2.address,
+            estimate,
+            await amm.token1Balance(),
+            await amm.token2Balance(),
+            (
+              await ethers.provider.getBlock(
+                await ethers.provider.getBlockNumber()
+              )
+            ).timestamp
+          );
+      });
     });
-    it("swaps tokens", async () => {});
-    // it("emits a Swap event", async () => {});
+    describe("Failure", () => {
+      it("reverts an invalid liquidity pair", async () => {
+        await expect(
+          amm.calculateTokenSwap(token1.address, token2.address, amount)
+        ).to.be.reverted;
+        await expect(
+          amm
+            .connect(investor1)
+            .swapToken(token1.address, token2.address, amount)
+        ).to.be.reverted;
+      });
+    });
   });
 
   describe("Removes Liquidity and Updates Shares", () => {});
@@ -142,22 +214,7 @@ describe("AMM", () => {
 //       transaction = await amm.connect(investor1).swapToken1(tokens(1));
 //       await transaction.wait();
 
-//       await expect(transaction)
-//         .to.emit(amm, "Swap")
-//         .withArgs(
-//           investor1.address,
-//           token1.address,
-//           tokens(1),
-//           token2.address,
-//           estimate,
-//           await amm.token1Balance(),
-//           await amm.token2Balance(),
-//           (
-//             await ethers.provider.getBlock(
-//               await ethers.provider.getBlockNumber()
-//             )
-//           ).timestamp
-//         );
+//
 
 //       balance = await token2.balanceOf(investor1.address);
 //       expect(estimate).to.equal(balance);
