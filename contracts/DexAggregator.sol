@@ -10,8 +10,8 @@ contract DexAggregator {
     AMM public amm2;
     mapping(address => uint) public tokenBalances;
     // 1.5% fee
-    uint256 constant public feeMultiplier = 15;
-    uint256 constant public feeDenominator = 1000;
+    uint256 public constant feeMultiplier = 15;
+    uint256 public constant feeDenominator = 1000;
 
     constructor(AMM _amm1, AMM _amm2) {
         owner = msg.sender;
@@ -27,6 +27,13 @@ contract DexAggregator {
         uint256 tokenGiveAmount,
         address tokenGet,
         uint256 tokenGetAmount,
+        uint256 timestamp
+    );
+
+    event Withdrawal(
+        address to,
+        address tokenWithdrawn,
+        uint256 amount,
         uint256 timestamp
     );
 
@@ -67,7 +74,10 @@ contract DexAggregator {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        require(_amount <= _tokenGiveContract.balanceOf(msg.sender), "insufficient funds");
+        require(
+            _amount <= _tokenGiveContract.balanceOf(msg.sender),
+            "Insufficient funds"
+        );
 
         (address chosenAMM, ) = ammSelector(
             _tokenGiveAddress,
@@ -109,8 +119,25 @@ contract DexAggregator {
         );
     }
 
-     modifier onlyOwner() {
+    modifier onlyOwner() {
         require(msg.sender == owner, "Caller is not the owner");
         _;
+    }
+
+    function withdrawTokenBalance(
+        address _tokenToWithdraw
+    ) public onlyOwner returns (bool success) {
+        IERC20 _tokenContract = IERC20(_tokenToWithdraw);
+        uint256 amountToWithdraw = tokenBalances[_tokenToWithdraw];
+
+        _tokenContract.transfer(owner, amountToWithdraw);
+        tokenBalances[_tokenToWithdraw] = 0;
+
+        emit Withdrawal(
+            msg.sender,
+            _tokenToWithdraw,
+            amountToWithdraw,
+            block.timestamp
+        );
     }
 }
