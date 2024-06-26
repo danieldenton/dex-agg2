@@ -101,10 +101,12 @@ contract AMM {
         token2Amount = (_token2Balance * _token1Amount) / _token1Balance;
     }
 
-    // function calculateFee(uint256 _amount) public pure returns (uint256 fee) {
-    //     fee = (_amount * 15) / 1000;
-    //     // 1.5% fee
-    // }
+    function deductFee(
+        uint256 _amount
+    ) public pure returns (uint256 amountAfterFee) {
+        uint256 fee = (_amount * 15) / 1000; // 1.75% fee
+        amountAfterFee = _amount - fee;
+    }
 
     function calculateTokenSwap(
         address _tokenGiveAddress,
@@ -126,7 +128,10 @@ contract AMM {
             "Insufficient liquidity to trade this pair"
         );
 
-        uint256 tokenGiveContractAfter = tokenGiveContractBalance + _amount;
+        uint256 _amountAfterFee = deductFee(_amount);
+
+        uint256 tokenGiveContractAfter = tokenGiveContractBalance +
+            _amountAfterFee;
         uint tokenGetContractAfter = K / tokenGiveContractAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractAfter;
 
@@ -147,13 +152,6 @@ contract AMM {
     ) external returns (uint256 tokenGetAmount) {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
-
-        uint256 tokenGiveContractBalance = _tokenGiveContract.balanceOf(
-            address(this)
-        );
-        uint256 tokenGetContractBalance = _tokenGetContract.balanceOf(
-            address(this)
-        );
 
         tokenGetAmount = calculateTokenSwap(
             _tokenGiveAddress,
@@ -178,8 +176,8 @@ contract AMM {
             _amount,
             _tokenGetAddress,
             tokenGetAmount,
-            tokenGiveContractBalance,
-            tokenGetContractBalance,
+            token1Balance,
+            token2Balance,
             block.timestamp
         );
     }
