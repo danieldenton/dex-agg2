@@ -49,7 +49,7 @@ describe("Dex Aggregator", () => {
     amm1 = await AMM.deploy(token1.address, token2.address);
     amm2 = await AMM.deploy(token1.address, token2.address);
 
-    // add liquidity
+    // add liquidity to AMMs
     amount = tokens(100000);
     // AMM1
     transaction = await token1.connect(deployer).approve(amm1.address, amount);
@@ -217,7 +217,7 @@ describe("Dex Aggregator", () => {
       });
     });
   });
-  describe("Fees and Withdrawals", () => {
+  describe("Withdrawals", () => {
     describe("Success", () => {
       let ownerBalanceBeforeWithdrawal, ownerBalanceAfter;
       beforeEach(async () => {
