@@ -133,6 +133,8 @@ contract DexAggregator {
         _tokenContract.transfer(owner, amountToWithdraw);
         tokenBalances[_tokenToWithdraw] = 0;
 
+        success = true;
+
         emit Withdrawal(
             msg.sender,
             _tokenToWithdraw,
