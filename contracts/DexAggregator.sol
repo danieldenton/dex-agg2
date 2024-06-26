@@ -7,6 +7,8 @@ import "./AMM.sol";
 contract DexAggregator {
     AMM public amm1;
     AMM public amm2;
+    uint256 public constant feePercentage = 3;
+    uint256 public constant feeDenominator = 10000;
 
     constructor(AMM _amm1, AMM _amm2) {
         amm1 = _amm1;
@@ -73,11 +75,19 @@ contract DexAggregator {
             _amm = amm2;
         }
 
+        _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
+
+        uint256 fee = (_amount * feePercentage) / feeDenominator;
+        uint256 amountAfterFee = _amount - fee;
+
+        _tokenGetContract.approve(address(_amm), amountAfterFee);
+
         tokenGetAmount = _amm.swapToken(
             _tokenGiveAddress,
             _tokenGetAddress,
-            _amount
+            amountAfterFee
         );
 
+        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
     }
 }
