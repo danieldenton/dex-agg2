@@ -5,12 +5,16 @@ import "hardhat/console.sol";
 import "./AMM.sol";
 
 contract DexAggregator {
+    address owner;
     AMM public amm1;
     AMM public amm2;
-    uint256 public constant feePercentage = 3;
-    uint256 public constant feeDenominator = 10000;
+    mapping(address => uint) public tokenBalances;
+    // 1.5% fee
+    uint256 constant public feeMultiplier = 15;
+    uint256 constant public feeDenominator = 1000;
 
     constructor(AMM _amm1, AMM _amm2) {
+        owner = msg.sender;
         amm1 = _amm1;
         amm2 = _amm2;
     }
@@ -77,8 +81,9 @@ contract DexAggregator {
 
         _tokenGiveContract.transferFrom(msg.sender, address(this), _amount);
 
-        uint256 fee = (_amount * feePercentage) / feeDenominator;
+        uint256 fee = (_amount * feeMultiplier) / feeDenominator;
         uint256 amountAfterFee = _amount - fee;
+        tokenBalances[_tokenGiveAddress] += fee;
 
         _tokenGetContract.approve(address(_amm), amountAfterFee);
 
@@ -89,5 +94,21 @@ contract DexAggregator {
         );
 
         _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+
+        emit Swap(
+            msg.sender,
+            address(this),
+            address(_amm),
+            _tokenGiveAddress,
+            _amount,
+            _tokenGetAddress,
+            tokenGetAmount,
+            block.timestamp
+        );
+    }
+
+     modifier onlyOwner() {
+        require(msg.sender == owner, "Caller is not the owner");
+        _;
     }
 }
