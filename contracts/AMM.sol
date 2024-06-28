@@ -104,7 +104,7 @@ contract AMM {
     function deductFee(
         uint256 _amount
     ) public pure returns (uint256 amountAfterFee) {
-        uint256 fee = (_amount * 15) / 1000; // 1.75% fee
+        uint256 fee = (_amount * 75) / 10000; // 0.75% fee
         amountAfterFee = _amount - fee;
     }
 
@@ -130,10 +130,10 @@ contract AMM {
 
         uint256 _amountAfterFee = deductFee(_amount);
 
-        uint256 tokenGiveContractAfter = tokenGiveContractBalance +
+        uint256 tokenGiveContractBalanceAfter = tokenGiveContractBalance +
             _amountAfterFee;
-        uint tokenGetContractAfter = K / tokenGiveContractAfter;
-        tokenGetAmount = tokenGetContractBalance - tokenGetContractAfter;
+        uint tokenGetContractBalanceAfter = K / tokenGiveContractBalanceAfter;
+        tokenGetAmount = tokenGetContractBalance - tokenGetContractBalanceAfter;
 
         if (tokenGetAmount == tokenGetContractBalance) {
             tokenGetAmount--;
