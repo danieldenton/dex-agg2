@@ -112,6 +112,7 @@ describe("AMM", () => {
   });
   describe("Swaps tokens", () => {
     let estimate,
+      fee,
       balanceOfInvestor1Token1BeforeSwap,
       balanceOfInvestor1Token2BeforeSwap;
     describe("Success", () => {
@@ -140,7 +141,7 @@ describe("AMM", () => {
           investor1.address
         );
 
-        estimate = await amm.calculateTokenSwap(
+        [estimate, fee] = await amm.calculateTokenSwap(
           token1.address,
           token2.address,
           amount
@@ -172,6 +173,7 @@ describe("AMM", () => {
             investor1.address,
             token1.address,
             amount,
+            fee,
             token2.address,
             estimate,
             await amm.token1Balance(),

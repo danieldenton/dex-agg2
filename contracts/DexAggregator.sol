@@ -22,6 +22,7 @@ contract DexAggregator {
         address amm,
         address tokenGive,
         uint256 tokenGiveAmount,
+        uint256 fee,
         address tokenGet,
         uint256 tokenGetAmount,
         uint256 timestamp
@@ -51,12 +52,12 @@ contract DexAggregator {
 
         (uint256 _amountAfterFee, ) = separateFee(_amount);
 
-        amm1Return = amm1.calculateTokenSwap(
+        (amm1Return, ) = amm1.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee
         );
-        amm2Return = amm2.calculateTokenSwap(
+        (amm2Return, ) = amm2.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee
@@ -75,12 +76,12 @@ contract DexAggregator {
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public returns (uint256 tokenGetAmount) {
+    ) public {
         AMM _amm;
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        (address chosenAMM, ) = ammSelector(
+        (address chosenAMM, uint256 tokenGetAmount) = ammSelector(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
@@ -96,15 +97,11 @@ contract DexAggregator {
 
         (uint256 _amountAfterFee, uint256 _fee) = separateFee(_amount);
 
-        tokenBalances[_tokenGiveAddress] += _fee;
+        tokenBalances[_tokenGiveAddress] += _amount;
 
         _tokenGiveContract.approve(address(_amm), _amountAfterFee);
 
-        tokenGetAmount = _amm.swapToken(
-            _tokenGiveAddress,
-            _tokenGetAddress,
-            _amountAfterFee
-        );
+        _amm.swapToken(_tokenGiveAddress, _tokenGetAddress, _amountAfterFee);
 
         _tokenGetContract.transfer(msg.sender, tokenGetAmount);
 
@@ -114,6 +111,7 @@ contract DexAggregator {
             address(_amm),
             _tokenGiveAddress,
             _amount,
+            _fee,
             _tokenGetAddress,
             tokenGetAmount,
             block.timestamp

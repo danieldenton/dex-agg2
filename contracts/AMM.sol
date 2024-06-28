@@ -38,6 +38,7 @@ contract AMM {
         address swapCaller,
         address tokenGive,
         uint256 tokenGiveAmount,
+        uint256 fee,
         address tokenGet,
         uint256 tokenGetAmount,
         uint256 token1Balance,
@@ -101,10 +102,10 @@ contract AMM {
         token2Amount = (_token2Balance * _token1Amount) / _token1Balance;
     }
 
-    function deductFee(
+    function separateFee(
         uint256 _amount
-    ) public pure returns (uint256 amountAfterFee) {
-        uint256 fee = (_amount * 75) / 10000; // 0.75% fee
+    ) public pure returns (uint256 amountAfterFee, uint256 fee) {
+        fee = (_amount * 75) / 10000; // 0.75% fee
         amountAfterFee = _amount - fee;
     }
 
@@ -112,7 +113,7 @@ contract AMM {
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public view returns (uint256 tokenGetAmount) {
+    ) public view returns (uint256 tokenGetAmount, uint256 fee) {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
@@ -128,12 +129,13 @@ contract AMM {
             "Insufficient liquidity to trade this pair"
         );
 
-        uint256 _amountAfterFee = deductFee(_amount);
+        (uint256 _amountAfterFee, uint256 _fee) = separateFee(_amount);
 
         uint256 tokenGiveContractBalanceAfter = tokenGiveContractBalance +
             _amountAfterFee;
         uint tokenGetContractBalanceAfter = K / tokenGiveContractBalanceAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractBalanceAfter;
+        fee = _fee;
 
         if (tokenGetAmount == tokenGetContractBalance) {
             tokenGetAmount--;
@@ -149,11 +151,11 @@ contract AMM {
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) external returns (uint256 tokenGetAmount) {
+    ) external {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        tokenGetAmount = calculateTokenSwap(
+        (uint256 _tokenGetAmount, uint256 _fee) = calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
@@ -162,20 +164,21 @@ contract AMM {
 
         if (address(token1) == _tokenGiveAddress) {
             token1Balance += _amount;
-            token2Balance -= tokenGetAmount;
+            token2Balance -= _tokenGetAmount;
         } else {
             token2Balance += _amount;
-            token1Balance -= tokenGetAmount;
+            token1Balance -= _tokenGetAmount;
         }
 
-        _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+        _tokenGetContract.transfer(msg.sender, _tokenGetAmount);
 
         emit Swap(
             msg.sender,
             _tokenGiveAddress,
             _amount,
+            _fee,
             _tokenGetAddress,
-            tokenGetAmount,
+            _tokenGetAmount,
             token1Balance,
             token2Balance,
             block.timestamp
