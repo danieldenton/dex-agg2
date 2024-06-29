@@ -38,7 +38,7 @@ contract DexAggregator {
     function separateFee(
         uint256 _amount
     ) public pure returns (uint256 amountAfterFee, uint256 fee) {
-        fee = (_amount * 15) / 1000; // 1.5% fee
+        fee = (_amount * 3) / 10000; // .03% fee
         amountAfterFee = _amount - fee;
     }
 
@@ -47,17 +47,14 @@ contract DexAggregator {
         address _tokenGetAddress,
         uint256 _amount
     ) public view returns (address chosenAMM, uint256 returnAmount) {
-        uint256 amm1Return;
-        uint256 amm2Return;
-
         (uint256 _amountAfterFee, ) = separateFee(_amount);
 
-        (amm1Return, ) = amm1.calculateTokenSwap(
+        (uint256 amm1Return, ) = amm1.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee
         );
-        (amm2Return, ) = amm2.calculateTokenSwap(
+        (uint256 amm2Return, ) = amm2.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee

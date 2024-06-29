@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
-import "./Token.sol";
+// import "./Token.sol";
 
 interface IERC20 {
     function transfer(
@@ -105,7 +105,7 @@ contract AMM {
     function separateFee(
         uint256 _amount
     ) public pure returns (uint256 amountAfterFee, uint256 fee) {
-        fee = (_amount * 75) / 10000; // 0.75% fee
+        fee = (_amount * 3) / 10000; // 0.03% fee
         amountAfterFee = _amount - fee;
     }
 
