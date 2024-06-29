@@ -38,7 +38,6 @@ contract AMM {
         address swapCaller,
         address tokenGive,
         uint256 tokenGiveAmount,
-        uint256 fee,
         address tokenGet,
         uint256 tokenGetAmount,
         uint256 token1Balance,
@@ -102,18 +101,17 @@ contract AMM {
         token2Amount = (_token2Balance * _token1Amount) / _token1Balance;
     }
 
-    function separateFee(
+    function calculateFee(
         uint256 _amount
-    ) public pure returns (uint256 amountAfterFee, uint256 fee) {
+    ) public pure returns (uint256 fee) {
         fee = (_amount * 3) / 10000; // 0.03% fee
-        amountAfterFee = _amount - fee;
     }
 
     function calculateTokenSwap(
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public view returns (uint256 tokenGetAmount, uint256 fee) {
+    ) public view returns (uint256 tokenGetAmount) {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
@@ -129,13 +127,13 @@ contract AMM {
             "Insufficient liquidity to trade this pair"
         );
 
-        (uint256 _amountAfterFee, uint256 _fee) = separateFee(_amount);
+        // uint256 _fee = calculateFee(_amount);
+        // uint256 _amountAfterFee;
 
         uint256 tokenGiveContractBalanceAfter = tokenGiveContractBalance +
-            _amountAfterFee;
+            _amount;
         uint tokenGetContractBalanceAfter = K / tokenGiveContractBalanceAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractBalanceAfter;
-        fee = _fee;
 
         if (tokenGetAmount == tokenGetContractBalance) {
             tokenGetAmount--;
@@ -155,7 +153,7 @@ contract AMM {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        (uint256 _tokenGetAmount, uint256 _fee) = calculateTokenSwap(
+        uint256 _tokenGetAmount = calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
@@ -176,7 +174,6 @@ contract AMM {
             msg.sender,
             _tokenGiveAddress,
             _amount,
-            _fee,
             _tokenGetAddress,
             _tokenGetAmount,
             token1Balance,

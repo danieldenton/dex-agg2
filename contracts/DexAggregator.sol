@@ -49,12 +49,12 @@ contract DexAggregator {
     ) public view returns (address chosenAMM, uint256 returnAmount) {
         (uint256 _amountAfterFee, ) = separateFee(_amount);
 
-        (uint256 amm1Return, ) = amm1.calculateTokenSwap(
+        uint256 amm1Return = amm1.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee
         );
-        (uint256 amm2Return, ) = amm2.calculateTokenSwap(
+        uint256 amm2Return = amm2.calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amountAfterFee
