@@ -24,8 +24,6 @@ describe("Dex Aggregator", () => {
     investor1,
     investor2,
     amm1Token1ReturnAmount,
-    amm2Token1ReturnAmount,
-    amm1Token2ReturnAmount,
     amm2Token2ReturnAmount;
 
   beforeEach(async () => {
@@ -135,78 +133,78 @@ describe("Dex Aggregator", () => {
     });
   });
   describe("Performs Swaps and Charges Fees", () => {
-    const formattedGiveAmount = formatEther(tokens(4));
-    // describe("Success", () => {
-    //   it("separates fee", async () => {
-    //     const [_amountAfterFee, _fee] = await dexAggregator.separateFee(amount);
-    //     expect(_amountAfterFee).to.equal(amountAfterFee);
-    //     expect(_fee).to.equal(tokens(fee));
-    //   });
-    //   it("successfully swaps token1 for token2 ", async () => {
-    //     const investor1Token1BalanceBeforeSwap = formatEther(
-    //       await token1.balanceOf(investor1.address)
-    //     );
-    //     const investor1Token2BalanceBeforeSwap = formatEther(
-    //       await token2.balanceOf(investor1.address)
-    //     );
-    //     transaction = await token1
-    //       .connect(investor1)
-    //       .approve(dexAggregator.address, amount);
-    //     await transaction.wait();
-    //     transaction = await dexAggregator
-    //       .connect(investor1)
-    //       .swap(token1.address, token2.address, amount);
-    //     await transaction.wait();
-    //     const investor1Token1BalanceAfterSwap = formatEther(
-    //       await token1.balanceOf(investor1.address)
-    //     );
-    //     const investor1Token2BalanceAfterSwap = formatEther(
-    //       await token2.balanceOf(investor1.address)
-    //     );
-    //     const tokenGetAmount = formatEther(amm2Token2ReturnAmount);
-    //     expect(Number(investor1Token1BalanceAfterSwap)).to.equal(
-    //       Number(investor1Token1BalanceBeforeSwap) - Number(formattedGiveAmount)
-    //     );
-    //     expect(Number(investor1Token2BalanceAfterSwap)).to.equal(
-    //       Number(investor1Token2BalanceBeforeSwap) + Number(tokenGetAmount)
-    //     );
-    //     expect(await token1.balanceOf(dexAggregator.address)).to.equal(
-    //       tokens(fee)
-    //     );
-    //   });
-    //   it("successfully swaps token2 for token1 ", async () => {
-    //     const investor2Token1BalanceBeforeSwap = formatEther(
-    //       await token1.balanceOf(investor2.address)
-    //     );
-    //     const investor2Token2BalanceBeforeSwap = formatEther(
-    //       await token2.balanceOf(investor2.address)
-    //     );
-    //     transaction = await token2
-    //       .connect(investor2)
-    //       .approve(dexAggregator.address, amount);
-    //     await transaction.wait();
-    //     transaction = await dexAggregator
-    //       .connect(investor2)
-    //       .swap(token2.address, token1.address, amount);
-    //     await transaction.wait();
-    //     const investor2Token1BalanceAfterSwap = formatEther(
-    //       await token1.balanceOf(investor2.address)
-    //     );
-    //     const investor2Token2BalanceAfterSwap = formatEther(
-    //       await token2.balanceOf(investor2.address)
-    //     );
-    //     const tokenGetAmount = formatEther(amm1Token1ReturnAmount);
-    //     expect(Number(investor2Token2BalanceAfterSwap)).to.equal(
-    //       Number(investor2Token2BalanceBeforeSwap) - Number(formattedGiveAmount)
-    //     );
-    //     expect(Number(investor2Token1BalanceAfterSwap)).to.equal(
-    //       Number(investor2Token1BalanceBeforeSwap) + Number(tokenGetAmount)
-    //     );
-    //     expect(await token2.balanceOf(dexAggregator.address)).to.equal(
-    //       tokens(fee)
-    //     );
-    //   });
-    // });
+    const formattedGiveAmount = formatEther(tokens(16));
+    describe("Success", () => {
+      it("separates fee", async () => {
+        const [_amountAfterFee, _fee] = await dexAggregator.separateFee(amount);
+        expect(_amountAfterFee).to.equal(amountAfterFee);
+        expect(_fee).to.equal(tokens(fee));
+      });
+      it("successfully swaps token1 for token2 ", async () => {
+        const investor1Token1BalanceBeforeSwap = formatEther(
+          await token1.balanceOf(investor1.address)
+        );
+        const investor1Token2BalanceBeforeSwap = formatEther(
+          await token2.balanceOf(investor1.address)
+        );
+        transaction = await token1
+          .connect(investor1)
+          .approve(dexAggregator.address, amount);
+        await transaction.wait();
+        transaction = await dexAggregator
+          .connect(investor1)
+          .swap(token1.address, token2.address, amount);
+        await transaction.wait();
+        const investor1Token1BalanceAfterSwap = formatEther(
+          await token1.balanceOf(investor1.address)
+        );
+        const investor1Token2BalanceAfterSwap = formatEther(
+          await token2.balanceOf(investor1.address)
+        );
+        const tokenGetAmount = formatEther(amm2Token2ReturnAmount);
+        expect(Number(investor1Token1BalanceAfterSwap)).to.equal(
+          Number(investor1Token1BalanceBeforeSwap) - Number(formattedGiveAmount)
+        );
+        expect(Number(investor1Token2BalanceAfterSwap)).to.equal(
+          Number(investor1Token2BalanceBeforeSwap) + Number(tokenGetAmount)
+        );
+        expect(await token1.balanceOf(dexAggregator.address)).to.equal(
+          tokens(fee)
+        );
+      });
+      it("successfully swaps token2 for token1 ", async () => {
+        const investor2Token1BalanceBeforeSwap = formatEther(
+          await token1.balanceOf(investor2.address)
+        );
+        const investor2Token2BalanceBeforeSwap = formatEther(
+          await token2.balanceOf(investor2.address)
+        );
+        transaction = await token2
+          .connect(investor2)
+          .approve(dexAggregator.address, amount);
+        await transaction.wait();
+        transaction = await dexAggregator
+          .connect(investor2)
+          .swap(token2.address, token1.address, amount);
+        await transaction.wait();
+        const investor2Token1BalanceAfterSwap = formatEther(
+          await token1.balanceOf(investor2.address)
+        );
+        const investor2Token2BalanceAfterSwap = formatEther(
+          await token2.balanceOf(investor2.address)
+        );
+        const tokenGetAmount = formatEther(amm1Token1ReturnAmount);
+        expect(Number(investor2Token2BalanceAfterSwap)).to.equal(
+          Number(investor2Token2BalanceBeforeSwap) - Number(formattedGiveAmount)
+        );
+        expect(Number(investor2Token1BalanceAfterSwap)).to.equal(
+          Number(investor2Token1BalanceBeforeSwap) + Number(tokenGetAmount)
+        );
+        expect(await token2.balanceOf(dexAggregator.address)).to.equal(
+          tokens(fee)
+        );
+      });
+    });
     describe("Failure", () => {
       it("it reverts for insuffucient funds", async () => {
         transaction = await token1
