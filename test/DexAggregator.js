@@ -70,7 +70,7 @@ describe("Dex Aggregator", () => {
     transaction = await amm2.connect(deployer).addLiquidity(amount, amount);
     await transaction.wait();
 
-    // create a swap on AMM1 which will make token1 cheaper on AMM1
+    // create a swap on AMM1 which will make token1 cheaper on AMM1 ... with enough of a traded anyhow.
     transaction = await token1
       .connect(investor1)
       .approve(amm1.address, tokens(1));
@@ -85,9 +85,9 @@ describe("Dex Aggregator", () => {
 
     // // Calls to the AMM to check the dex agg
     // // charge the fee first
-    amount = tokens(4);
-    fee = (4 * 3) / 10000;
-    amountMinusFee = 4 - fee;
+    amount = tokens(16);
+    fee = (16 * 3) / 10000;
+    amountMinusFee = 16 - fee;
     amountAfterFee = tokens(amountMinusFee);
     amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
       token1.address,
