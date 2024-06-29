@@ -18,7 +18,6 @@ contract DexAggregator {
 
     event Swap(
         address from,
-        address to,
         address amm,
         address tokenGive,
         uint256 tokenGiveAmount,
@@ -104,7 +103,6 @@ contract DexAggregator {
 
         emit Swap(
             msg.sender,
-            address(this),
             address(_amm),
             _tokenGiveAddress,
             _amount,

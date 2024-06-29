@@ -204,6 +204,37 @@ describe("Dex Aggregator", () => {
           tokens(fee)
         );
       });
+      it("emits a Swap event", async () => {
+        const [chosenAMM, returnAmount] = await dexAggregator.ammSelector(
+          token1.address,
+          token2.address,
+          amount
+        );
+        transaction = await token1
+        .connect(investor1)
+        .approve(dexAggregator.address, amount);
+      await transaction.wait();
+      transaction = await dexAggregator
+        .connect(investor1)
+        .swap(token1.address, token2.address, amount);
+      await transaction.wait();
+        await expect(transaction)
+          .to.emit(dexAggregator, "Swap")
+          .withArgs(
+            investor1.address,
+            chosenAMM,
+            token1.address,
+            amount,
+            tokens(fee),
+            token2.address,
+            returnAmount,
+            (
+              await ethers.provider.getBlock(
+                await ethers.provider.getBlockNumber()
+              )
+            ).timestamp
+          );
+      })
     });
     describe("Failure", () => {
       it("it reverts for insuffucient funds", async () => {
