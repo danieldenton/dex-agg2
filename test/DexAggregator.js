@@ -253,7 +253,7 @@ describe("Dex Aggregator", () => {
   describe("Withdrawals", () => {
     describe("Success", () => {
       let ownerBalanceBeforeWithdrawal, ownerBalanceAfter;
-      beforeEach(async () => {
+      it("successfully withdraws tokenBalances", async () => {
         ownerBalanceBeforeWithdrawal = await token2.balanceOf(deployer.address);
         transaction = await token2
           .connect(investor2)
@@ -263,17 +263,15 @@ describe("Dex Aggregator", () => {
           .connect(investor2)
           .swap(token2.address, token1.address, amount);
         await transaction.wait();
+        transaction = await dexAggregator
+          .connect(deployer)
+          .withdrawTokenBalance(token2.address);
+        await transaction.wait();
+        ownerBalanceAfter = await token2.balanceOf(deployer.address);
+        expect(
+          Number(ownerBalanceBeforeWithdrawal) + Number(tokens(fee))
+        ).to.equal(Number(ownerBalanceAfter));
       });
-      // it("successfully withdraws tokenBalances", async () => {
-      //   transaction = await dexAggregator
-      //     .connect(deployer)
-      //     .withdrawTokenBalance(token2.address);
-      //   await transaction.wait();
-      //   ownerBalanceAfter = await token2.balanceOf(deployer.address);
-      //   expect(
-      //     Number(ownerBalanceBeforeWithdrawal) + Number(tokens(fee))
-      //   ).to.equal(Number(ownerBalanceAfter));
-      // });
     });
     describe("Failure", () => {
       it("doesn't allow a non-owner to withdraw", async () => {

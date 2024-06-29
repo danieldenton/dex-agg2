@@ -93,7 +93,7 @@ contract DexAggregator {
 
         (uint256 _amountAfterFee, uint256 _fee) = separateFee(_amount);
 
-        tokenBalances[_tokenGiveAddress] += _amount;
+        tokenBalances[_tokenGiveAddress] += _fee;
 
         _tokenGiveContract.approve(address(_amm), _amountAfterFee);
 
