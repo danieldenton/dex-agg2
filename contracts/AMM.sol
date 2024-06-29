@@ -127,11 +127,11 @@ contract AMM {
             "Insufficient liquidity to trade this pair"
         );
 
-        // uint256 _fee = calculateFee(_amount);
-        // uint256 _amountAfterFee;
+        uint256 _fee = calculateFee(_amount);
+        uint256 _amountAfterFee = _amount - _fee;
 
         uint256 tokenGiveContractBalanceAfter = tokenGiveContractBalance +
-            _amount;
+            _amountAfterFee;
         uint tokenGetContractBalanceAfter = K / tokenGiveContractBalanceAfter;
         tokenGetAmount = tokenGetContractBalance - tokenGetContractBalanceAfter;
 
