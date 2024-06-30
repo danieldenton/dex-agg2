@@ -199,40 +199,64 @@ describe("AMM", () => {
   });
 
   describe("Removes Liquidity and Updates Shares", () => {
-    amount = tokens(50000);
-    beforeEach(async () => {
-      transaction = await token1
-        .connect(liquidityProvider)
-        .approve(amm.address, amount);
-      await transaction.wait();
-      transaction = await token2
-        .connect(liquidityProvider)
-        .approve(amm.address, amount);
-      await transaction.wait();
-      transaction = await amm
-        .connect(liquidityProvider)
-        .addLiquidity(amount, amount);
-      await transaction.wait();
-      balanceToken1BeforeRemoval = await token1.balanceOf(
-        liquidityProvider.address
-      );
-      balanceToken2BeforeRemoval = await token2.balanceOf(
-        liquidityProvider.address
-      );
-      console.log(await amm.shares(liquidityProvider.address));
-      transaction = await amm
-        .connect(liquidityProvider)
-        .removeLiquidity(shares(50));
-      await transaction.wait();
+    describe("Success", () => {
+      beforeEach(async () => {
+        amount = tokens(100000);
+        transaction = await token1
+          .connect(deployer)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await token2
+          .connect(deployer)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await amm.connect(deployer).addLiquidity(amount, amount);
+        await transaction.wait();
+        amount = tokens(50000);
+        transaction = await token1
+          .connect(liquidityProvider)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await token2
+          .connect(liquidityProvider)
+          .approve(amm.address, amount);
+        await transaction.wait();
+        transaction = await amm
+          .connect(liquidityProvider)
+          .addLiquidity(amount, amount);
+        await transaction.wait();
+        balanceToken1BeforeRemoval = await token1.balanceOf(
+          liquidityProvider.address
+        );
+        balanceToken2BeforeRemoval = await token2.balanceOf(
+          liquidityProvider.address
+        );
+        transaction = await amm
+          .connect(liquidityProvider)
+          .removeLiquidity(shares(50));
+        await transaction.wait();
+      });
+      it("removes liquididty", async () => {
+        balanceToken1After = await token1.balanceOf(liquidityProvider.address);
+        balanceToken2After = await token2.balanceOf(liquidityProvider.address);
+        expect(Number(balanceToken1After)).to.equal(
+          Number(balanceToken1BeforeRemoval) + Number(amount)
+        );
+        expect(Number(balanceToken2After)).to.equal(
+          Number(balanceToken2BeforeRemoval) + Number(amount)
+        );
+      });
+      it("updates shares", async () => {
+        expect(await amm.shares(liquidityProvider.address)).to.equal(0);
+        expect(await amm.shares(deployer.address)).to.equal(shares(100));
+        expect(await amm.totalShares()).to.equal(shares(100));
+      });
     });
-    it("removes liquididty", async () => {
-      balanceToken1After = await token1.balanceOf(liquidityProvider.address);
-      balanceToken2After = await token2.balanceOf(liquidityProvider.address);
-    });
-    it("updates shares", async () => {
-      expect(await amm.shares(liquidityProvider.address)).to.equal(0);
-      expect(await amm.shares(deployer.address)).to.equal(shares(100));
-      expect(await amm.totalShares()).to.equal(shares(100));
+    describe("Failure", () => {
+      it("reverts an ttempt to withdraw without any shares", async () => {
+        await expect(amm.connect(liquidityProvider).removeLiquidity(shares(50)))
+          .to.be.reverted;
+      });
     });
   });
 });
