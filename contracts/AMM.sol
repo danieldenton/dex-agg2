@@ -111,7 +111,7 @@ contract AMM {
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public view returns (uint256 tokenGetAmount) {
+    ) public view returns (uint256 tokenGetAmount, uint256 fee) {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
@@ -127,8 +127,8 @@ contract AMM {
             "Insufficient liquidity to trade this pair"
         );
 
-        uint256 _fee = calculateFee(_amount);
-        uint256 _amountAfterFee = _amount - _fee;
+        fee = calculateFee(_amount);
+        uint256 _amountAfterFee = _amount - fee;
 
         uint256 tokenGiveContractBalanceAfter = tokenGiveContractBalance +
             _amountAfterFee;
@@ -153,7 +153,7 @@ contract AMM {
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
 
-        uint256 _tokenGetAmount = calculateTokenSwap(
+        (uint256 _tokenGetAmount, ) = calculateTokenSwap(
             _tokenGiveAddress,
             _tokenGetAddress,
             _amount
