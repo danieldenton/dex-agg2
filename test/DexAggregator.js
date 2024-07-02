@@ -87,12 +87,12 @@ describe("Dex Aggregator", () => {
     fee = (16 * 3) / 10000;
     amountMinusFee = 16 - fee;
     amountAfterFee = tokens(amountMinusFee);
-    amm2Token2ReturnAmount = await amm2.calculateTokenSwap(
+    [amm2Token2ReturnAmount] = await amm2.calculateTokenSwap(
       token1.address,
       token2.address,
       amountAfterFee
     );
-    amm1Token1ReturnAmount = await amm1.calculateTokenSwap(
+    [amm1Token1ReturnAmount] = await amm1.calculateTokenSwap(
       token2.address,
       token1.address,
       amountAfterFee
