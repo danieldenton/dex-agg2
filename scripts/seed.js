@@ -16,6 +16,7 @@ async function main() {
 
   const { chainId } = await hre.ethers.provider.getNetwork();
 
+  //Tokens and distribution
   const rump = await hre.ethers.getContractAt(
     "Token",
     config[chainId].rump.address
