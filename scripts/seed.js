@@ -43,57 +43,132 @@ async function main() {
     .connect(deployer)
     .transfer(investor4.address, tokens(20));
 
+  // Blood Moon seed
   let amount = tokens(100);
 
-  const amm = await hre.ethers.getContractAt(
+  const bloodMoonSwap = await hre.ethers.getContractAt(
     "AMM",
-    config[chainId].amm.address
+    config[chainId].bloodMoonSwap.address
   );
-  console.log(`AMM Token fetched at: ${amm.address}\n`);
+  console.log(`Blood Moon fetched at: ${amm.address}\n`);
 
-  transaction = await rump.connect(deployer).approve(amm.address, amount);
+  transaction = await rump
+    .connect(deployer)
+    .approve(bloodMoonSwap.address, amount);
   await transaction.wait();
-  transaction = await usd.connect(deployer).approve(amm.address, amount);
+  transaction = await usd
+    .connect(deployer)
+    .approve(bloodMoonSwap.address, amount);
   await transaction.wait();
 
   console.log("Adding Liquidity");
-  transaction = await amm.connect(deployer).addLiquidity(amount, amount);
+  transaction = await bloodMoonSwap
+    .connect(deployer)
+    .addLiquidity(amount, amount);
   await transaction.wait();
 
   console.log("Swapping");
-  transaction = await rump.connect(investor1).approve(amm.address, tokens(10));
+  transaction = await rump
+    .connect(investor1)
+    .approve(bloodMoonSwap.address, tokens(10));
   await transaction.wait();
 
-  transaction = await amm
+  transaction = await bloodMoonSwap
     .connect(investor1)
     .swapToken(rump.address, usd.address, tokens(1));
   await transaction.wait();
 
-  transaction = await usd.connect(investor2).approve(amm.address, tokens(10));
+  transaction = await usd
+    .connect(investor2)
+    .approve(cloudSwap.address, tokens(10));
   await transaction.wait();
 
-  transaction = await amm
+  transaction = await bloodMoonSwap
     .connect(investor2)
     .swapToken(usd.address, rump.address, tokens(1));
   await transaction.wait();
 
-  transaction = await rump.connect(investor3).approve(amm.address, tokens(10));
+  transaction = await rump
+    .connect(investor3)
+    .approve(cloudSwap.address, tokens(10));
   await transaction.wait();
 
-  transaction = await amm
+  transaction = await bloodMoonSwap
     .connect(investor3)
     .swapToken(rump.address, usd.address, tokens(10));
   await transaction.wait();
 
-  transaction = await usd.connect(investor4).approve(amm.address, tokens(10));
+  transaction = await usd
+    .connect(investor4)
+    .approve(cloudSwap.address, tokens(10));
   await transaction.wait();
 
-  transaction = await amm
+  transaction = await bloodMoonSwap
     .connect(investor4)
     .swapToken(usd.address, rump.address, tokens(5));
   await transaction.wait();
 
-  console.log("finished");
+  console.log("finished with Blood Moon");
+
+// Cloud Swap
+const cloudSwap = await hre.ethers.getContractAt(
+  "AMM",
+  config[chainId].cloudSwap.address
+);
+console.log(`Cloud fetched at: ${amm.address}\n`);
+
+transaction = await rump.connect(deployer).approve(cloudSwap.address, amount);
+await transaction.wait();
+transaction = await usd.connect(deployer).approve(cloudSwap.address, amount);
+await transaction.wait();
+
+console.log("Adding Liquidity");
+transaction = await cloudSwap.connect(deployer).addLiquidity(amount, amount);
+await transaction.wait();
+
+console.log("Swapping");
+transaction = await rump
+  .connect(investor1)
+  .approve(cloudSwap.address, tokens(10));
+await transaction.wait();
+
+transaction = await cloudSwap
+  .connect(investor1)
+  .swapToken(rump.address, usd.address, tokens(1));
+await transaction.wait();
+
+transaction = await usd
+  .connect(investor2)
+  .approve(cloudSwap.address, tokens(10));
+await transaction.wait();
+
+transaction = await cloudSwap
+  .connect(investor2)
+  .swapToken(usd.address, rump.address, tokens(1));
+await transaction.wait();
+
+transaction = await rump
+  .connect(investor3)
+  .approve(cloudSwap.address, tokens(10));
+await transaction.wait();
+
+transaction = await cloudSwap
+  .connect(investor3)
+  .swapToken(rump.address, usd.address, tokens(10));
+await transaction.wait();
+
+transaction = await usd
+  .connect(investor4)
+  .approve(cloudSwap.address, tokens(10));
+await transaction.wait();
+
+transaction = await cloudSwap
+  .connect(investor4)
+  .swapToken(usd.address, rump.address, tokens(5));
+await transaction.wait();
+
+console.log("finished with Cloud");
+
 }
 
 main().catch((error) => {
