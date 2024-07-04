@@ -50,7 +50,7 @@ async function main() {
     "AMM",
     config[chainId].bloodMoonSwap.address
   );
-  console.log(`Blood Moon fetched at: ${amm.address}\n`);
+  console.log(`Blood Moon fetched at: ${bloodMoonSwap.address}\n`);
 
   transaction = await rump
     .connect(deployer)
@@ -80,7 +80,7 @@ async function main() {
 
   transaction = await usd
     .connect(investor2)
-    .approve(cloudSwap.address, tokens(10));
+    .approve(bloodMoonSwap.address, tokens(10));
   await transaction.wait();
 
   transaction = await bloodMoonSwap
@@ -90,7 +90,7 @@ async function main() {
 
   transaction = await rump
     .connect(investor3)
-    .approve(cloudSwap.address, tokens(10));
+    .approve(bloodMoonSwap.address, tokens(10));
   await transaction.wait();
 
   transaction = await bloodMoonSwap
@@ -100,7 +100,7 @@ async function main() {
 
   transaction = await usd
     .connect(investor4)
-    .approve(cloudSwap.address, tokens(10));
+    .approve(bloodMoonSwap.address, tokens(10));
   await transaction.wait();
 
   transaction = await bloodMoonSwap
@@ -115,7 +115,7 @@ const cloudSwap = await hre.ethers.getContractAt(
   "AMM",
   config[chainId].cloudSwap.address
 );
-console.log(`Cloud fetched at: ${amm.address}\n`);
+console.log(`Cloud fetched at: ${cloudSwap.address}\n`);
 
 transaction = await rump.connect(deployer).approve(cloudSwap.address, amount);
 await transaction.wait();
