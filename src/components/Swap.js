@@ -30,7 +30,7 @@ export const Swap = () => {
     <div>
       <Card
         style={{
-          maxWidth: "450px",
+          maxWidth: "550px",
           borderRadius: "5%",
           border: "solid 4px purple",
         }}
@@ -131,12 +131,13 @@ export const Swap = () => {
               <>
                 <Button
                   type="submit"
-                  className="bg-light text-light border-light"
+                  className="text-light"
+                  style={{ backgroundColor: "purple", border: 'none'}}
                 >
                   Swap
                 </Button>
-                <Form.Text className="text-light">Exchange Rate: </Form.Text>
-                <Form.Text className="text-light">.03% Fee: </Form.Text>
+                <Form.Text style={{ marginTop: '10px'}} className="text-light">Exchange Rate: </Form.Text>
+                <Form.Text style={{ marginTop: '10px'}} className="text-light">.03% Fee: </Form.Text>
                 {/* <Form.Text className="text-light">Exchange Rate: {price}</Form.Text>
                       <Form.Text className="text-light">.03% Fee: {fee}</Form.Text> */}
               </>

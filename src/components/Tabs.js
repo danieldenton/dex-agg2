@@ -21,9 +21,12 @@ export const Tabs = () => {
       <LinkContainer
         key={idx}
         to={link.to}
-        className={
-          location.pathname === link.to ? "bg-light text-dark" : "text-light"
-        }
+        className={location.pathname === link.to ? "text-light" : "text-light"}
+        style={{
+          backgroundColor:
+            location.pathname === link.to ? "purple" : "transparent",
+         
+        }}
       >
         <Nav.Link>{link.text}</Nav.Link>
       </LinkContainer>
