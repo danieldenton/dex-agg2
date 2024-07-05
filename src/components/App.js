@@ -7,6 +7,7 @@ import "../App.css";
 import Navigation from "./Navigation";
 import Swap from "./Swap";
 import Charts from "./Chart";
+import Tabs from "./Tabs";
 
 import { loadProvider, loadNetwork, loadAccount } from "../store/interactions";
 
@@ -39,7 +40,7 @@ function App() {
       <HashRouter>
         <Navigation />
         <hr />
-        {/* <Tabs /> */}
+        <Tabs />
         <Routes>
           <Route exact path="/" element={<Swap />} />
           <Route path="/charts" element={<Charts />} />
