@@ -63,7 +63,7 @@ export const loadDexAgg = async (provider, chainId, dispatch) => {
     provider
   );
   dispatch(setContract(dexAgg));
-  console.log("hey");
+  return dexAgg
 };
 
 // export const loadAMM = async (provider, chainId, dispatch) => {

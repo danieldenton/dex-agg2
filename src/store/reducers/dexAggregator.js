@@ -4,12 +4,13 @@ export const dexAgg = createSlice({
   name: "dexAgg",
   initialState: {
     contract: null,
+    swapping: {
+        isSwapping: false,
+        isSuccess: false,
+        transactionHash: null,
+      },
   },
-  swapping: {
-    isSwapping: false,
-    isSuccess: false,
-    transactionHash: null,
-  },
+ 
   reducers: {
     setContract: (state, action) => {
       state.contract = action.payload;
