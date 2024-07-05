@@ -36,14 +36,14 @@ const Navigation = () => {
           style={{ borderRadius: '100%'}}
           className="d-inline-block align-top mx-3"
         /> */}
-        <Navbar.Brand className="text-warning fw-bold" href="#">
+        <Navbar.Brand className="text-light fw-bold" href="#">
           Dex Aggregator
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="nav" />
         <Navbar.Collapse id="nav" className="justify-content-end">
-          <div className="d-flex justify-content-end mt-3 bg-dark border-warning">
+          <div className="d-flex justify-content-end mt-3 bg-dark border-light">
             <Form.Select
-            className="bg-warning border-warning text-dark"
+            className="bg-light border-light text-dark"
               aria-label="Network Selector"
               value={config[chainId] ? `0x${chainId.toString(16)}` : `0`}
               onChange={handleNetwork}
@@ -57,21 +57,21 @@ const Navigation = () => {
             </Form.Select>
 
             {account ? (
-              <Navbar.Text className="d-flex align-items-center text-warning">
+              <Navbar.Text className="d-flex align-items-center text-light">
                 {account.slice(0, 5) + "..." + account.slice(38, 42)}
                 <Blockies
                   seed={account}
                   size={10}
                   scale={3}
-                  color="black"
-                  bgColor="red"
-                  spotColor="orange"
+                  color="purple"
+                  bgColor="blue"
+                  spotColor="white"
                   className="identicon mx-2"
                 />
               </Navbar.Text>
             ) : (
               <Button
-                className="bg-warning border-warning text-dark"
+                className="bg-light border-light text-dark"
                 onClick={handleConnect}
               >
                 Connect
