@@ -1,0 +1,28 @@
+body {
+    background-color: rgb(33, 37, 41);
+}
+
+hr {
+    color: white;
+}
+
+p {
+    color: white;
+    font-size: 15px;
+}
+
+thead {
+    color: red;
+}
+
+tr {
+    color: red;
+}
+
+td {
+    color: red;
+}
+
+th {
+    color: red 
+}

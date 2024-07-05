@@ -4,19 +4,18 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Blockies from "react-blockies";
 
-import { loadAccount, loadBalances } from "../store/interactions";
+import { loadAccount } from "../store/interactions";
 import config from "../config.json";
 
 const Navigation = () => {
   const chainId = useSelector((state) => state.provider.chainId);
   const account = useSelector((state) => state.provider.account);
-  const tokens = useSelector((state) => state.tokens.contracts);
-  const amm = useSelector((state) => state.amm.contract);
+  // const tokens = useSelector((state) => state.tokens.contracts);
+  // const amm = useSelector((state) => state.amm.contract);
   const dispatch = useDispatch();
 
   const handleConnect = async () => {
     const account = await loadAccount(dispatch);
-    await loadBalances(amm, tokens, account, dispatch);
   };
 
   const handleNetwork = async (e) => {
@@ -28,14 +27,6 @@ const Navigation = () => {
   };
 
   return (
-    <>
-      <style type="text/css">
-        {`
-.nav {
-background-color: blac;
-}
-`}
-      </style>
       <Navbar className="my-3 bg-dark" expand="lg">
         {/* <img
           alt="logo"
@@ -45,14 +36,14 @@ background-color: blac;
           style={{ borderRadius: '100%'}}
           className="d-inline-block align-top mx-3"
         /> */}
-        <Navbar.Brand className="text-danger fw-bold" href="#">
-          Blood Moon Swap
+        <Navbar.Brand className="text-warning fw-bold" href="#">
+          Dex Aggregator
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="nav" />
         <Navbar.Collapse id="nav" className="justify-content-end">
-          <div className="d-flex justify-content-end mt-3 bg-dark border-danger">
+          <div className="d-flex justify-content-end mt-3 bg-dark border-warning">
             <Form.Select
-            className="bg-danger border-danger text-light"
+            className="bg-warning border-warning text-dark"
               aria-label="Network Selector"
               value={config[chainId] ? `0x${chainId.toString(16)}` : `0`}
               onChange={handleNetwork}
@@ -66,7 +57,7 @@ background-color: blac;
             </Form.Select>
 
             {account ? (
-              <Navbar.Text className="d-flex align-items-center text-danger">
+              <Navbar.Text className="d-flex align-items-center text-warning">
                 {account.slice(0, 5) + "..." + account.slice(38, 42)}
                 <Blockies
                   seed={account}
@@ -80,7 +71,7 @@ background-color: blac;
               </Navbar.Text>
             ) : (
               <Button
-                className="bg-danger border-danger text-dark"
+                className="bg-warning border-warning text-dark"
                 onClick={handleConnect}
               >
                 Connect
@@ -89,7 +80,6 @@ background-color: blac;
           </div>
         </Navbar.Collapse>
       </Navbar>
-    </>
   );
 };
 

@@ -1,20 +1,20 @@
 import { ethers } from "ethers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
-import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
-import {
-  setContract,
-  sharesLoaded,
-  swapsLoaded,
-  depositRequest,
-  depositSuccess,
-  depositFail,
-  swapRequest,
-  swapSuccess,
-  swapFail,
-  withdrawRequest,
-  withdrawSuccess,
-  withdrawFail,
-} from "./reducers/amm";
+// import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
+// import {
+//   setContract,
+//   sharesLoaded,
+//   swapsLoaded,
+//   depositRequest,
+//   depositSuccess,
+//   depositFail,
+//   swapRequest,
+//   swapSuccess,
+//   swapFail,
+//   withdrawRequest,
+//   withdrawSuccess,
+//   withdrawFail,
+// } from "./reducers/amm";
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json"
 import TOKEN_ABI from "../abis/Token.json";
 import AMM_ABI from "../abis/AMM.json";
@@ -40,20 +40,20 @@ export const loadAccount = async (dispatch) => {
   return account;
 };
 
-export const loadTokens = async (provider, chainId, dispatch) => {
-  const rump = new ethers.Contract(
-    config[chainId].rump.address,
-    TOKEN_ABI,
-    provider
-  );
-  const usd = new ethers.Contract(
-    config[chainId].usd.address,
-    TOKEN_ABI,
-    provider
-  );
-  dispatch(setContracts([rump, usd]));
-  dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
-};
+// export const loadTokens = async (provider, chainId, dispatch) => {
+//   const rump = new ethers.Contract(
+//     config[chainId].rump.address,
+//     TOKEN_ABI,
+//     provider
+//   );
+//   const usd = new ethers.Contract(
+//     config[chainId].usd.address,
+//     TOKEN_ABI,
+//     provider
+//   );
+//   dispatch(setContracts([rump, usd]));
+//   dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
+// };
 
 // export const loadAMM = async (provider, chainId, dispatch) => {
 //   const amm = new ethers.Contract(

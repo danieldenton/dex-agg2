@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { HashRouter, Routes, Route } from "react-router-dom";
-
+import "../App.css"
 // Components
 import Navigation from "./Navigation";
 import Loading from "./Loading";
