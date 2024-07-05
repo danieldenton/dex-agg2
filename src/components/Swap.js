@@ -25,6 +25,9 @@ export const Swap = () => {
 
   const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
+  const tokens = useSelector((state) => state.tokens.contracts)
+  const symbols = useSelector((state) => state.tokens.symbols)
+  const balances = useSelector((state) => state.tokens.balances)
 
   return (
     <div>
@@ -48,11 +51,11 @@ export const Swap = () => {
                 </Form.Label>
                 <Form.Text className="text-light">
                   Balance:{" "}
-                  {/* {inputToken === symbols[0]
+                  {inputToken === symbols[0]
                         ? balances[0]
                         : inputToken === symbols[1]
                         ? balances[1]
-                        : 0} */}
+                        : 0}
                 </Form.Text>
               </div>
               <InputGroup>
@@ -62,20 +65,20 @@ export const Swap = () => {
                   min="0.0"
                   step="any"
                   //   onChange={(e) => handleInput(e)}
-                  //   disabled={!inputToken}
+                    disabled={!inputToken}
                   className="bg-light border-light"
                 />
                 <DropdownButton
                   variant="outline-light text-light bg-dark"
-                  //   title={inputToken ? inputToken : "Select Token"}
+                    title={inputToken ? inputToken : "Select Token"}
                 >
                   <Dropdown.Item
-                  // onClick={(e) => setInputToken(e.target.innerHTML)}
+                  onClick={(e) => setInputToken(e.target.innerHTML)}
                   >
                     RUMP
                   </Dropdown.Item>
                   <Dropdown.Item
-                  // onClick={(e) => setInputToken(e.target.innerHTML)}
+                  onClick={(e) => setInputToken(e.target.innerHTML)}
                   >
                     USD
                   </Dropdown.Item>
@@ -89,32 +92,32 @@ export const Swap = () => {
                 </Form.Label>
                 <Form.Text className="text-light">
                   Balance:{" "}
-                  {/* {outputToken === symbols[0]
+                  {outputToken === symbols[0]
                         ? balances[0]
                         : outputToken === symbols[1]
                         ? balances[1]
-                        : 0} */}
+                        : 0}
                 </Form.Text>
               </div>
               <InputGroup>
                 <Form.Control
                   type="number"
                   placeholder="0.0"
-                  //   value={outputAmount === 0 ? "" : outputAmount}
+                    value={outputAmount === 0 ? "" : outputAmount}
                   disabled
                   className="bg-light border-light"
                 />
                 <DropdownButton
                   variant="outline-light text-light bg-dark"
-                  //   title={outputToken ? outputToken : "Select Token"}
+                    title={outputToken ? outputToken : "Select Token"}
                 >
                   <Dropdown.Item
-                    // onClick={(e) => setOutputToken(e.target.innerHTML)}
+                    onClick={(e) => setOutputToken(e.target.innerHTML)}
                   >
                     RUMP
                   </Dropdown.Item>
                   <Dropdown.Item
-                    // onClick={(e) => setOutputToken(e.target.innerHTML)}
+                    onClick={(e) => setOutputToken(e.target.innerHTML)}
                   >
                     USD
                   </Dropdown.Item>

@@ -9,7 +9,12 @@ import Swap from "./Swap";
 import Charts from "./Chart";
 import Tabs from "./Tabs";
 
-import { loadProvider, loadNetwork, loadAccount } from "../store/interactions";
+import {
+  loadProvider,
+  loadNetwork,
+  loadAccount,
+  loadTokens,
+} from "../store/interactions";
 
 function App() {
   const dispatch = useDispatch();
@@ -27,7 +32,7 @@ function App() {
       await loadAccount(dispatch);
     });
 
-    // await loadTokens(provider, chainId, dispatch);
+    await loadTokens(provider, chainId, dispatch);
     // await loadAMM(provider, chainId, dispatch);
   };
 
