@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { HashRouter, Routes, Route } from "react-router-dom";
-import "../App.css"
-// Components
+import "../App.css";
+
 import Navigation from "./Navigation";
-import Loading from "./Loading";
+import Swap from "./Swap";
+import Charts from "./Chart";
 
 import { loadProvider, loadNetwork, loadAccount } from "../store/interactions";
 
@@ -34,21 +35,16 @@ function App() {
   }, []);
 
   return (
-    <Container>
-      <Navigation />
-
-      <h1 className="my-4 text-center">Dex Aggregator</h1>
-
-      {/* {isLoading ? (
-        <Loading />
-      ) : (
-        <>
-          <p className="text-center">
-            <strong>Your ETH Balance:</strong> {balance} ETH
-          </p>
-          <p className="text-center">Edit App.js to add your code here.</p>
-        </>
-      )} */}
+    <Container className="bg-dark" style={{ height: "100%" }}>
+      <HashRouter>
+        <Navigation />
+        <hr />
+        {/* <Tabs /> */}
+        <Routes>
+          <Route exact path="/" element={<Swap />} />
+          <Route path="/charts" element={<Charts />} />
+        </Routes>
+      </HashRouter>
     </Container>
   );
 }
