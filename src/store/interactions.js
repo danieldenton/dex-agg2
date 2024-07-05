@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
+import { setContract } from "./reducers/dexAggregator";
 // import {
 //   setContract,
 //   sharesLoaded,
@@ -15,7 +16,7 @@ import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
 //   withdrawSuccess,
 //   withdrawFail,
 // } from "./reducers/amm";
-import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json"
+import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
 import AMM_ABI from "../abis/AMM.json";
 import config from "../config.json";
@@ -53,6 +54,16 @@ export const loadTokens = async (provider, chainId, dispatch) => {
   );
   dispatch(setContracts([rump, usd]));
   dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
+};
+
+export const loadDexAgg = async (provider, chainId, dispatch) => {
+  const dexAgg = new ethers.Contract(
+    config[chainId].dexAggregator.address,
+    DEX_AGGREGATOR_ABI,
+    provider
+  );
+  dispatch(setContract(dexAgg));
+  console.log("hey");
 };
 
 // export const loadAMM = async (provider, chainId, dispatch) => {

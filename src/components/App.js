@@ -14,6 +14,7 @@ import {
   loadNetwork,
   loadAccount,
   loadTokens,
+  loadDexAgg
 } from "../store/interactions";
 
 function App() {
@@ -33,7 +34,7 @@ function App() {
     });
 
     await loadTokens(provider, chainId, dispatch);
-    // await loadAMM(provider, chainId, dispatch);
+    await loadDexAgg(provider, chainId, dispatch);
   };
 
   useEffect(() => {

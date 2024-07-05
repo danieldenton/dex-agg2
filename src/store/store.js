@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import provider from "./reducers/provider";
 import tokens from "./reducers/tokens";
-import amm from "./reducers/amm";
+import { dexAgg } from "./reducers/dexAggregator";
 
 export const store = configureStore({
   reducer: {
     provider,
-    tokens
+    tokens,
+    dexAgg
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
