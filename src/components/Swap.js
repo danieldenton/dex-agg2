@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 
-import { swap, loadBalances } from "../store/interactions";
+import { loadAccount, swap, loadBalances } from "../store/interactions";
 
 export const Swap = () => {
   const [inputToken, setInputToken] = useState(null);
@@ -29,6 +29,10 @@ export const Swap = () => {
   const symbols = useSelector((state) => state.tokens.symbols);
   const balances = useSelector((state) => state.tokens.balances);
   const dexAgg = useSelector((state) => state.dexAgg.contract);
+
+  const handleConnect = async () => {
+    await loadAccount(dispatch);
+  };
 
   const handleInput = async (e) => {
     if (!inputToken || !outputToken) {
@@ -76,7 +80,10 @@ export const Swap = () => {
       );
       const unformattedFee = await dexAgg.separateFee(_token2Amount);
 
-      const _fee = ethers.utils.formatUnits(unformattedFee[1].toString(), "ether");
+      const _fee = ethers.utils.formatUnits(
+        unformattedFee[1].toString(),
+        "ether"
+      );
 
       setOutputAmount(_token1Amount);
       setFee(_fee);
@@ -93,126 +100,132 @@ export const Swap = () => {
         }}
         className="mx-auto  bg-dark"
       >
-        {account ? (
-          <Form
-            // onSubmit={handleSwap}
-            style={{ maxWidth: "450px", margin: "50px auto" }}
-          >
-            <Row className="my-3">
-              <div className="d-flex justify-content-between">
-                <Form.Label className="text-light">
-                  <strong>Input:</strong>
-                </Form.Label>
-                <Form.Text className="text-light">
-                  Balance:{" "}
-                  {inputToken === symbols[0]
-                    ? balances[0]
-                    : inputToken === symbols[1]
-                    ? balances[1]
-                    : 0}
-                </Form.Text>
-              </div>
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  placeholder="0.0"
-                  min="0.0"
-                  step="any"
-                    onChange={(e) => handleInput(e)}
-                  disabled={!inputToken}
-                  className="bg-light border-light"
-                />
-                <DropdownButton
-                  variant="outline-light text-light bg-dark"
-                  title={inputToken ? inputToken : "Select Token"}
+        <Form
+          onSubmit={account ? null : handleConnect}
+          style={{ maxWidth: "450px", margin: "50px auto" }}
+        >
+          <Row className="my-3">
+            <div className="d-flex justify-content-between">
+              <Form.Label className="text-light">
+                <strong>Input:</strong>
+              </Form.Label>
+              <Form.Text className="text-light">
+                Balance:{" "}
+                {inputToken === symbols[0]
+                  ? balances[0]
+                  : inputToken === symbols[1]
+                  ? balances[1]
+                  : 0}
+              </Form.Text>
+            </div>
+            <InputGroup>
+              <Form.Control
+                type="number"
+                placeholder="0.0"
+                min="0.0"
+                step="any"
+                onChange={(e) => handleInput(e)}
+                disabled={!inputToken}
+                className="bg-light border-light"
+              />
+              <DropdownButton
+                variant="outline-light text-light bg-dark"
+                title={inputToken ? inputToken : "Select Token"}
+              >
+                <Dropdown.Item
+                  onClick={(e) => setInputToken(e.target.innerHTML)}
                 >
-                  <Dropdown.Item
-                    onClick={(e) => setInputToken(e.target.innerHTML)}
-                  >
-                    RUMP
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={(e) => setInputToken(e.target.innerHTML)}
-                  >
-                    USD
-                  </Dropdown.Item>
-                </DropdownButton>
-              </InputGroup>
-            </Row>
-            <Row className="my-4">
-              <div className="d-flex justify-content-between">
-                <Form.Label className="text-light">
-                  <strong>Output:</strong>
-                </Form.Label>
-                <Form.Text className="text-light">
-                  Balance:{" "}
-                  {outputToken === symbols[0]
-                    ? balances[0]
-                    : outputToken === symbols[1]
-                    ? balances[1]
-                    : 0}
-                </Form.Text>
-              </div>
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  placeholder="0.0"
-                  value={outputAmount === 0 ? "" : outputAmount}
-                  disabled
-                  className="bg-light border-light"
-                />
-                <DropdownButton
-                  variant="outline-light text-light bg-dark"
-                  title={outputToken ? outputToken : "Select Token"}
+                  RUMP
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={(e) => setInputToken(e.target.innerHTML)}
                 >
-                  <Dropdown.Item
-                    onClick={(e) => setOutputToken(e.target.innerHTML)}
-                  >
-                    RUMP
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={(e) => setOutputToken(e.target.innerHTML)}
-                  >
-                    USD
-                  </Dropdown.Item>
-                </DropdownButton>
-              </InputGroup>
-            </Row>
-            <Row>
-              {/* {isSwapping ? (
+                  USD
+                </Dropdown.Item>
+              </DropdownButton>
+            </InputGroup>
+          </Row>
+          <Row className="my-4">
+            <div className="d-flex justify-content-between">
+              <Form.Label className="text-light">
+                <strong>Output:</strong>
+              </Form.Label>
+              <Form.Text className="text-light">
+                Balance:{" "}
+                {outputToken === symbols[0]
+                  ? balances[0]
+                  : outputToken === symbols[1]
+                  ? balances[1]
+                  : 0}
+              </Form.Text>
+            </div>
+            <InputGroup>
+              <Form.Control
+                type="number"
+                placeholder="0.0"
+                value={outputAmount === 0 ? "" : outputAmount}
+                disabled
+                className="bg-light border-light"
+              />
+              <DropdownButton
+                variant="outline-light text-light bg-dark"
+                title={outputToken ? outputToken : "Select Token"}
+              >
+                <Dropdown.Item
+                  onClick={(e) => setOutputToken(e.target.innerHTML)}
+                >
+                  RUMP
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={(e) => setOutputToken(e.target.innerHTML)}
+                >
+                  USD
+                </Dropdown.Item>
+              </DropdownButton>
+            </InputGroup>
+          </Row>
+          <Row>
+            {/* {isSwapping ? (
                     <Spinner
                       animation="border"
                       style={{ display: "block", margin: "0 auto", color: "red" }}
                     />
                   ) : ( */}
-              <>
+            <>
+              <Form.Text
+                style={{ marginBottom: "10px" }}
+                className="text-light"
+              >
+                .03% Fee: {fee > 0 ? fee : "0"}
+              </Form.Text>
+              {account ? (
                 <Button
                   type="submit"
                   className="text-light"
-                  style={{ backgroundColor: "purple", border: "none" }}
+                  style={{
+                    height: "45px",
+                    backgroundColor: "purple",
+                    border: "none",
+                  }}
                 >
                   Swap
                 </Button>
-                <Form.Text style={{ marginTop: "10px" }} className="text-light">
-                  Exchange Rate:{" "}
-                </Form.Text>
-                <Form.Text style={{ marginTop: "10px" }} className="text-light">
-                  .03% Fee: {fee}
-                </Form.Text>
-                {/* <Form.Text className="text-light">Exchange Rate: {price}</Form.Text>
-                      // <Form.Text className="text-light">.03% Fee: {fee}</Form.Text> */}
-              </>
-              {/* )} */}
-            </Row>
-          </Form>
-        ) : (
-          <p
-            className="d-flex justify-content-center align-items-center"
-            style={{ height: "300px" }}
-          >
-            Please connect wallet
-          </p>
-        )}
+              ) : (
+                <Button
+                  type="submit"
+                  className="text-light"
+                  style={{
+                    height: "45px",
+                    backgroundColor: "purple",
+                    border: "none",
+                  }}
+                >
+                  Connect Wallet
+                </Button>
+              )}
+            </>
+          </Row>
+        </Form>
       </Card>
       {/* {isSwapping ? (
             <Alert
