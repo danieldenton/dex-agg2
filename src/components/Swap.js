@@ -25,9 +25,63 @@ export const Swap = () => {
 
   const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
-  const tokens = useSelector((state) => state.tokens.contracts)
-  const symbols = useSelector((state) => state.tokens.symbols)
-  const balances = useSelector((state) => state.tokens.balances)
+  const tokens = useSelector((state) => state.tokens.contracts);
+  const symbols = useSelector((state) => state.tokens.symbols);
+  const balances = useSelector((state) => state.tokens.balances);
+  const dexAgg = useSelector((state) => state.dexAgg.contract);
+
+  const handleInput = async (e) => {
+    if (!inputToken || !outputToken) {
+      window.alert("Please select a token");
+      return;
+    }
+
+    if (inputToken === outputToken) {
+      window.alert("Invalid token pair");
+      return;
+    }
+
+    if (inputToken === "RUMP") {
+      setInputAmount(e.target.value);
+      const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
+      const result = await dexAgg.ammSelector(
+        tokens[0].address,
+        tokens[1].address,
+        _token1Amount
+      );
+      const _token2Amount = ethers.utils.formatUnits(
+        result[1].toString(),
+        "ether"
+      );
+      const unformattedFee = await dexAgg.separateFee(_token1Amount);
+
+      const _fee = ethers.utils.formatUnits(
+        unformattedFee[1].toString(),
+        "ether"
+      );
+
+      setOutputAmount(_token2Amount);
+      setFee(_fee);
+    } else {
+      setInputAmount(e.target.value);
+      const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
+      const result = await dexAgg.calculateTokenSwap(
+        tokens[1].address,
+        tokens[0].address,
+        _token2Amount
+      );
+      const _token1Amount = ethers.utils.formatUnits(
+        result[1].toString(),
+        "ether"
+      );
+      const unformattedFee = await dexAgg.separateFee(_token2Amount);
+
+      const _fee = ethers.utils.formatUnits(unformattedFee[1].toString(), "ether");
+
+      setOutputAmount(_token1Amount);
+      setFee(_fee);
+    }
+  };
 
   return (
     <div>
@@ -52,10 +106,10 @@ export const Swap = () => {
                 <Form.Text className="text-light">
                   Balance:{" "}
                   {inputToken === symbols[0]
-                        ? balances[0]
-                        : inputToken === symbols[1]
-                        ? balances[1]
-                        : 0}
+                    ? balances[0]
+                    : inputToken === symbols[1]
+                    ? balances[1]
+                    : 0}
                 </Form.Text>
               </div>
               <InputGroup>
@@ -64,21 +118,21 @@ export const Swap = () => {
                   placeholder="0.0"
                   min="0.0"
                   step="any"
-                  //   onChange={(e) => handleInput(e)}
-                    disabled={!inputToken}
+                    onChange={(e) => handleInput(e)}
+                  disabled={!inputToken}
                   className="bg-light border-light"
                 />
                 <DropdownButton
                   variant="outline-light text-light bg-dark"
-                    title={inputToken ? inputToken : "Select Token"}
+                  title={inputToken ? inputToken : "Select Token"}
                 >
                   <Dropdown.Item
-                  onClick={(e) => setInputToken(e.target.innerHTML)}
+                    onClick={(e) => setInputToken(e.target.innerHTML)}
                   >
                     RUMP
                   </Dropdown.Item>
                   <Dropdown.Item
-                  onClick={(e) => setInputToken(e.target.innerHTML)}
+                    onClick={(e) => setInputToken(e.target.innerHTML)}
                   >
                     USD
                   </Dropdown.Item>
@@ -93,23 +147,23 @@ export const Swap = () => {
                 <Form.Text className="text-light">
                   Balance:{" "}
                   {outputToken === symbols[0]
-                        ? balances[0]
-                        : outputToken === symbols[1]
-                        ? balances[1]
-                        : 0}
+                    ? balances[0]
+                    : outputToken === symbols[1]
+                    ? balances[1]
+                    : 0}
                 </Form.Text>
               </div>
               <InputGroup>
                 <Form.Control
                   type="number"
                   placeholder="0.0"
-                    value={outputAmount === 0 ? "" : outputAmount}
+                  value={outputAmount === 0 ? "" : outputAmount}
                   disabled
                   className="bg-light border-light"
                 />
                 <DropdownButton
                   variant="outline-light text-light bg-dark"
-                    title={outputToken ? outputToken : "Select Token"}
+                  title={outputToken ? outputToken : "Select Token"}
                 >
                   <Dropdown.Item
                     onClick={(e) => setOutputToken(e.target.innerHTML)}
@@ -135,14 +189,18 @@ export const Swap = () => {
                 <Button
                   type="submit"
                   className="text-light"
-                  style={{ backgroundColor: "purple", border: 'none'}}
+                  style={{ backgroundColor: "purple", border: "none" }}
                 >
                   Swap
                 </Button>
-                <Form.Text style={{ marginTop: '10px'}} className="text-light">Exchange Rate: </Form.Text>
-                <Form.Text style={{ marginTop: '10px'}} className="text-light">.03% Fee: </Form.Text>
+                <Form.Text style={{ marginTop: "10px" }} className="text-light">
+                  Exchange Rate:{" "}
+                </Form.Text>
+                <Form.Text style={{ marginTop: "10px" }} className="text-light">
+                  .03% Fee: {fee}
+                </Form.Text>
                 {/* <Form.Text className="text-light">Exchange Rate: {price}</Form.Text>
-                      <Form.Text className="text-light">.03% Fee: {fee}</Form.Text> */}
+                      // <Form.Text className="text-light">.03% Fee: {fee}</Form.Text> */}
               </>
               {/* )} */}
             </Row>
