@@ -14,7 +14,7 @@ import {
   loadNetwork,
   loadAccount,
   loadTokens,
-  loadDexAgg
+  loadDexAgg,
 } from "../store/interactions";
 
 function App() {
@@ -43,7 +43,10 @@ function App() {
 
   return (
     <Container className="bg-dark" style={{ height: "100%" }}>
-      <HashRouter>
+      <Navigation />
+      <hr />
+      <Swap />
+      {/* <HashRouter>
         <Navigation />
         <hr />
         <Tabs />
@@ -51,7 +54,7 @@ function App() {
           <Route exact path="/" element={<Swap />} />
           <Route path="/charts" element={<Charts />} />
         </Routes>
-      </HashRouter>
+      </HashRouter> */}
     </Container>
   );
 }

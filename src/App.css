@@ -4,9 +4,10 @@ body {
 
 hr {
     color: white;
+    margin-bottom: 60px;
 }
 
-p {
+/* p {
     color: white;
     font-size: 15px;
 }
@@ -25,4 +26,4 @@ td {
 
 th {
     color: red 
-}
+} */
