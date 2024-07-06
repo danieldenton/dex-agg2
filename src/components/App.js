@@ -1,13 +1,10 @@
 import { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { HashRouter, Routes, Route } from "react-router-dom";
 import "../App.css";
 
 import Navigation from "./Navigation";
 import Swap from "./Swap";
-import Charts from "./Chart";
-import Tabs from "./Tabs";
 
 import {
   loadProvider,
@@ -46,15 +43,6 @@ function App() {
       <Navigation />
       <hr />
       <Swap />
-      {/* <HashRouter>
-        <Navigation />
-        <hr />
-        <Tabs />
-        <Routes>
-          <Route exact path="/" element={<Swap />} />
-          <Route path="/charts" element={<Charts />} />
-        </Routes>
-      </HashRouter> */}
     </Container>
   );
 }

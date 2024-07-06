@@ -105,15 +105,5 @@ export const swap = async (
   }
 };
 
-// export const loadAMM = async (provider, chainId, dispatch) => {
-//   const amm = new ethers.Contract(
-//     config[chainId].amm.address,
-//     AMM_ABI,
-//     provider
-//   );
-
-//   dispatch(setContract(amm));
-//   return amm;
-// };
 
 
