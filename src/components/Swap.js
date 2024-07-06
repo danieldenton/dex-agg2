@@ -23,7 +23,6 @@ export const Swap = () => {
 
   const dispatch = useDispatch();
 
-  const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
   const tokens = useSelector((state) => state.tokens.contracts);
   const symbols = useSelector((state) => state.tokens.symbols);

@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
-import { setContract } from "./reducers/dexAggregator";
+import { setContract, swapRequest, swapSuccess, swapFail } from "./reducers/dexAggregator";
 // import {
 //   setContract,
 //   sharesLoaded,
@@ -77,6 +77,34 @@ export const loadBalances = async (tokens, account, dispatch) => {
   );
 };
 
+export const swap = async (
+  provider,
+  dexAgg,
+  tokenGive,
+  tokenGet,
+  amount,
+  dispatch
+) => {
+  try {
+    dispatch(swapRequest());
+    let transaction;
+    const signer = await provider.getSigner();
+
+    transaction = await tokenGive.connect(signer).approve(dexAgg.address, amount);
+    await transaction.wait();
+
+    transaction = await dexAgg
+      .connect(signer)
+      .swap(tokenGive.address, tokenGet.address, amount);
+
+    await transaction.wait();
+
+    dispatch(swapSuccess(transaction.hash));
+  } catch (error) {
+    dispatch(swapFail());
+  }
+};
+
 // export const loadAMM = async (provider, chainId, dispatch) => {
 //   const amm = new ethers.Contract(
 //     config[chainId].amm.address,
@@ -88,30 +116,4 @@ export const loadBalances = async (tokens, account, dispatch) => {
 //   return amm;
 // };
 
-// export const swap = async (
-//   provider,
-//   amm,
-//   tokenGive,
-//   tokenGet,
-//   amount,
-//   dispatch
-// ) => {
-//   try {
-//     dispatch(swapRequest());
-//     let transaction;
-//     const signer = await provider.getSigner();
 
-//     transaction = await tokenGive.connect(signer).approve(amm.address, amount);
-//     await transaction.wait();
-
-//     transaction = await amm
-//       .connect(signer)
-//       .swapToken(tokenGive.address, tokenGet.address, amount);
-
-//     await transaction.wait();
-
-//     dispatch(swapSuccess(transaction.hash));
-//   } catch (error) {
-//     dispatch(swapFail());
-//   }
-// };
