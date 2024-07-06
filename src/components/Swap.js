@@ -29,6 +29,11 @@ export const Swap = () => {
   const symbols = useSelector((state) => state.tokens.symbols);
   const balances = useSelector((state) => state.tokens.balances);
   const dexAgg = useSelector((state) => state.dexAgg.contract);
+  const isSwapping = useSelector((state) => state.dexAgg.swapping.isSwapping);
+  const isSuccess = useSelector((state) => state.dexAgg.swapping.isSuccess);
+  const transactionHash = useSelector(
+    (state) => state.dexAgg.swapping.transactionHash
+  );
 
   const handleConnect = async () => {
     const account = await loadAccount(dispatch);
@@ -55,7 +60,7 @@ export const Swap = () => {
       if (inputToken === "RUMP") {
         setInputAmount(e.target.value);
         const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.ammSelector(
+        const result = await dexAgg.dexAggSelector(
           tokens[0].address,
           tokens[1].address,
           _token1Amount
@@ -76,7 +81,7 @@ export const Swap = () => {
       } else {
         setInputAmount(e.target.value);
         const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.ammSelector(
+        const result = await dexAgg.dexAggSelector(
           tokens[1].address,
           tokens[0].address,
           _token2Amount
@@ -229,12 +234,12 @@ export const Swap = () => {
             </InputGroup>
           </Row>
           <Row>
-            {/* {isSwapping ? (
+            {isSwapping ? (
                     <Spinner
                       animation="border"
                       style={{ display: "block", margin: "0 auto", color: "red" }}
                     />
-                  ) : ( */}
+                  ) : (
             <>
               <Form.Text
                 style={{ marginBottom: "10px" }}
