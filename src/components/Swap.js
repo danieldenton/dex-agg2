@@ -10,7 +10,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 
-import { loadAccount, swap, loadBalances } from "../store/interactions";
+import { loadAccount, loadBalances, swap } from "../store/interactions";
 
 export const Swap = () => {
   const [inputToken, setInputToken] = useState(null);
@@ -23,6 +23,7 @@ export const Swap = () => {
 
   const dispatch = useDispatch();
 
+  const provider = useSelector((state) => state.provider.connection);
   const account = useSelector((state) => state.provider.account);
   const tokens = useSelector((state) => state.tokens.contracts);
   const symbols = useSelector((state) => state.tokens.symbols);
@@ -35,6 +36,12 @@ export const Swap = () => {
   };
 
   const handleInput = async (e) => {
+    if (e.target.value === "") {
+      setInputAmount(0);
+      setOutputAmount(0)
+      setFee(0);
+      return
+    }
     if (!inputToken || !outputToken) {
       window.alert("Please select a token");
       return;
@@ -44,50 +51,87 @@ export const Swap = () => {
       window.alert("Invalid token pair");
       return;
     }
+    try {
+      if (inputToken === "RUMP") {
+        setInputAmount(e.target.value);
+        const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
+        const result = await dexAgg.ammSelector(
+          tokens[0].address,
+          tokens[1].address,
+          _token1Amount
+        );
+        const _token2Amount = ethers.utils.formatUnits(
+          result[1].toString(),
+          "ether"
+        );
+        const unformattedFee = await dexAgg.separateFee(_token1Amount);
+
+        const _fee = ethers.utils.formatUnits(
+          unformattedFee[1].toString(),
+          "ether"
+        );
+
+        setOutputAmount(_token2Amount);
+        setFee(_fee);
+      } else {
+        setInputAmount(e.target.value);
+        const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
+        const result = await dexAgg.ammSelector(
+          tokens[1].address,
+          tokens[0].address,
+          _token2Amount
+        );
+        const _token1Amount = ethers.utils.formatUnits(
+          result[1].toString(),
+          "ether"
+        );
+        const unformattedFee = await dexAgg.separateFee(_token2Amount);
+
+        const _fee = ethers.utils.formatUnits(
+          unformattedFee[1].toString(),
+          "ether"
+        );
+
+        setOutputAmount(_token1Amount);
+        setFee(_fee);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSwap = async (e) => {
+    e.preventDefault();
+    setShowAlert(false);
+    if (inputToken === outputToken) {
+      window.alert("Invalid token pair");
+      return;
+    }
+
+    const _inputAmount = ethers.utils.parseUnits(inputAmount, "ether");
 
     if (inputToken === "RUMP") {
-      setInputAmount(e.target.value);
-      const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
-      const result = await dexAgg.ammSelector(
-        tokens[0].address,
-        tokens[1].address,
-        _token1Amount
+      await swap(
+        provider,
+        dexAgg,
+        tokens[0],
+        tokens[1],
+        _inputAmount,
+        dispatch
       );
-      const _token2Amount = ethers.utils.formatUnits(
-        result[1].toString(),
-        "ether"
-      );
-      const unformattedFee = await dexAgg.separateFee(_token1Amount);
-
-      const _fee = ethers.utils.formatUnits(
-        unformattedFee[1].toString(),
-        "ether"
-      );
-
-      setOutputAmount(_token2Amount);
-      setFee(_fee);
     } else {
-      setInputAmount(e.target.value);
-      const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
-      const result = await dexAgg.calculateTokenSwap(
-        tokens[1].address,
-        tokens[0].address,
-        _token2Amount
+      await swap(
+        provider,
+        dexAgg,
+        tokens[1],
+        tokens[0],
+        _inputAmount,
+        dispatch
       );
-      const _token1Amount = ethers.utils.formatUnits(
-        result[1].toString(),
-        "ether"
-      );
-      const unformattedFee = await dexAgg.separateFee(_token2Amount);
-
-      const _fee = ethers.utils.formatUnits(
-        unformattedFee[1].toString(),
-        "ether"
-      );
-
-      setOutputAmount(_token1Amount);
-      setFee(_fee);
     }
+
+    await loadBalances(tokens, account, dispatch);
+    setShowAlert(true);
   };
 
   return (
@@ -101,7 +145,7 @@ export const Swap = () => {
         className="mx-auto  bg-dark"
       >
         <Form
-          onSubmit={account ? null : handleConnect}
+          onSubmit={account ? handleSwap : handleConnect}
           style={{ maxWidth: "450px", margin: "50px auto" }}
         >
           <Row className="my-3">
