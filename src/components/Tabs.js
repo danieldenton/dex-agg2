@@ -24,7 +24,7 @@ export const Tabs = () => {
         className={location.pathname === link.to ? "text-light" : "text-light"}
         style={{
           backgroundColor:
-            location.pathname === link.to ? "purple" : "transparent",
+            location.pathname === link.to ? "#7D3CB5" : "transparent",
          
         }}
       >

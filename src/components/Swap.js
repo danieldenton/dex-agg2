@@ -97,7 +97,7 @@ export const Swap = () => {
         style={{
           maxWidth: "550px",
           borderRadius: "5%",
-          border: "solid 4px purple",
+          border: "solid 4px #7D3CB5",
         }}
         className="mx-auto  bg-dark"
       >
@@ -205,7 +205,7 @@ export const Swap = () => {
                   className="text-light"
                   style={{
                     height: "45px",
-                    backgroundColor: "purple",
+                    backgroundColor: "#7D3CB5",
                     border: "none",
                   }}
                 >
@@ -214,10 +214,9 @@ export const Swap = () => {
               ) : (
                 <Button
                   type="submit"
-                  className="text-light"
+                  className="text-light bg-primary"
                   style={{
                     height: "45px",
-                    backgroundColor: "purple",
                     border: "none",
                   }}
                 >

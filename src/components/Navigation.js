@@ -29,7 +29,7 @@ const Navigation = () => {
           style={{ borderRadius: '100%'}}
           className="d-inline-block align-top mx-3"
         /> */}
-      <Navbar.Brand className="text-light fw-bold" href="#">
+      <Navbar.Brand className="fw-bold text-light" href="#">
         Dex Aggregator
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="nav" />
@@ -42,8 +42,8 @@ const Navigation = () => {
                 seed={account}
                 size={10}
                 scale={3}
-                color="purple"
-                bgColor="blue"
+                color="#7D3CB5"
+                bgColor="rgb(13 110 253)"
                 spotColor="white"
                 className="identicon mx-2"
               />
