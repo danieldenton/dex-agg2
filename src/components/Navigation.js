@@ -1,17 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import Blockies from "react-blockies";
 
-import { loadAccount } from "../store/interactions";
 import config from "../config.json";
 
 const Navigation = () => {
   const chainId = useSelector((state) => state.provider.chainId);
   const account = useSelector((state) => state.provider.account);
-  // const tokens = useSelector((state) => state.tokens.contracts);
-  // const amm = useSelector((state) => state.amm.contract);
   const dispatch = useDispatch();
 
   const handleNetwork = async (e) => {
@@ -23,7 +19,8 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar className="my-3 bg-dark" expand="lg">
+    <Navbar className="my-3 bg-dark" expand="lg" style={{ minHeight: "80px"
+    }}>
       {/* <img
           alt="logo"
           src={logo}

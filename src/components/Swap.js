@@ -32,7 +32,7 @@ export const Swap = () => {
 
   const handleConnect = async () => {
     const account = await loadAccount(dispatch);
-    await loadBalances(tokens, account, dispatch)
+    await loadBalances(tokens, account, dispatch);
   };
 
   const handleInput = async (e) => {
