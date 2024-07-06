@@ -66,6 +66,17 @@ export const loadDexAgg = async (provider, chainId, dispatch) => {
   return dexAgg
 };
 
+export const loadBalances = async (tokens, account, dispatch) => {
+  const balance1 = await tokens[0].balanceOf(account);
+  const balance2 = await tokens[1].balanceOf(account);
+  dispatch(
+    balancesLoaded([
+      ethers.utils.formatUnits(balance1.toString(), "ether"),
+      ethers.utils.formatUnits(balance2.toString(), "ether"),
+    ])
+  );
+};
+
 // export const loadAMM = async (provider, chainId, dispatch) => {
 //   const amm = new ethers.Contract(
 //     config[chainId].amm.address,
@@ -75,17 +86,6 @@ export const loadDexAgg = async (provider, chainId, dispatch) => {
 
 //   dispatch(setContract(amm));
 //   return amm;
-// };
-
-// export const loadBalances = async (amm, tokens, account, dispatch) => {
-//   const balance1 = await tokens[0].balanceOf(account);
-//   const balance2 = await tokens[1].balanceOf(account);
-//   dispatch(
-//     balancesLoaded([
-//       ethers.utils.formatUnits(balance1.toString(), "ether"),
-//       ethers.utils.formatUnits(balance2.toString(), "ether"),
-//     ])
-//   );
 // };
 
 // export const swap = async (

@@ -31,7 +31,8 @@ export const Swap = () => {
   const dexAgg = useSelector((state) => state.dexAgg.contract);
 
   const handleConnect = async () => {
-    await loadAccount(dispatch);
+    const account = await loadAccount(dispatch);
+    await loadBalances(tokens, account, dispatch)
   };
 
   const handleInput = async (e) => {
