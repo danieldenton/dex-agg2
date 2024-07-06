@@ -245,7 +245,7 @@ export const Swap = () => {
               {account ? (
                 <Button
                   type="submit"
-                  className="text-light"
+                  className="text-light animate-button"
                   style={{
                     height: "45px",
                     backgroundColor: "#7D3CB5",
@@ -257,7 +257,7 @@ export const Swap = () => {
               ) : (
                 <Button
                   type="submit"
-                  className="text-light bg-primary"
+                  className="text-dark bg-light"
                   style={{
                     height: "45px",
                     border: "none",

@@ -1,10 +1,27 @@
 body {
-    background-color: rgb(33, 37, 41);
+  background-color: rgb(33, 37, 41);
 }
 
 hr {
-    color: white;
-    margin-bottom: 60px;
+  color: white;
+  margin-bottom: 60px;
+}
+
+@keyframes colorChange {
+  0% {
+    background-color: #7d3cb5;
+  }
+  50% {
+    background-color: #0000ff;
+  }
+  100% {
+    background-color:  #CCFF00;
+  }
+}
+
+.animate-button {
+  animation: colorChange 3s infinite;
+  transition: color 0.3s ease;
 }
 
 /* p {
