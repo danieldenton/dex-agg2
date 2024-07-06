@@ -2,23 +2,8 @@ import { ethers } from "ethers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
 import { setContract, swapRequest, swapSuccess, swapFail } from "./reducers/dexAggregator";
-// import {
-//   setContract,
-//   sharesLoaded,
-//   swapsLoaded,
-//   depositRequest,
-//   depositSuccess,
-//   depositFail,
-//   swapRequest,
-//   swapSuccess,
-//   swapFail,
-//   withdrawRequest,
-//   withdrawSuccess,
-//   withdrawFail,
-// } from "./reducers/amm";
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
-import AMM_ABI from "../abis/AMM.json";
 import config from "../config.json";
 
 export const loadProvider = (dispatch) => {
