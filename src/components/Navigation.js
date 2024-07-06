@@ -29,7 +29,7 @@ const Navigation = () => {
           style={{ borderRadius: '100%'}}
           className="d-inline-block align-top mx-3"
         /> */}
-      <Navbar.Brand className="fw-bold text-light" href="#">
+      <Navbar.Brand className="fw-bold" style={{ color: "#CCFF00"}}>
         Dex Aggregator
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="nav" />

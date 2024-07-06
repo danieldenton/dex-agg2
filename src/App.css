@@ -15,32 +15,12 @@ hr {
     background-color: #0000ff;
   }
   100% {
-    background-color:  #CCFF00;
+    background-color: red;
   }
 }
 
 .animate-button {
-  animation: colorChange 3s infinite;
-  transition: color 0.3s ease;
+  animation: colorChange 5s infinite;
+  transition: color 0.7s ease;
 }
 
-/* p {
-    color: white;
-    font-size: 15px;
-}
-
-thead {
-    color: red;
-}
-
-tr {
-    color: red;
-}
-
-td {
-    color: red;
-}
-
-th {
-    color: red 
-} */

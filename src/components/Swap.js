@@ -35,7 +35,8 @@ export const Swap = () => {
     (state) => state.dexAgg.swapping.transactionHash
   );
 
-  const handleConnect = async () => {
+  const handleConnect = async (e) => {
+    e.preventDefault()
     const account = await loadAccount(dispatch);
     await loadBalances(tokens, account, dispatch);
   };
@@ -43,9 +44,9 @@ export const Swap = () => {
   const handleInput = async (e) => {
     if (e.target.value === "") {
       setInputAmount(0);
-      setOutputAmount(0)
+      setOutputAmount(0);
       setFee(0);
-      return
+      return;
     }
     if (!inputToken || !outputToken) {
       window.alert("Please select a token");
@@ -60,7 +61,7 @@ export const Swap = () => {
       if (inputToken === "RUMP") {
         setInputAmount(e.target.value);
         const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.dexAggSelector(
+        const result = await dexAgg.ammSelector(
           tokens[0].address,
           tokens[1].address,
           _token1Amount
@@ -81,7 +82,7 @@ export const Swap = () => {
       } else {
         setInputAmount(e.target.value);
         const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.dexAggSelector(
+        const result = await dexAgg.ammSelector(
           tokens[1].address,
           tokens[0].address,
           _token2Amount
@@ -235,43 +236,43 @@ export const Swap = () => {
           </Row>
           <Row>
             {isSwapping ? (
-                    <Spinner
-                      animation="border"
-                      style={{ display: "block", margin: "0 auto", color: "red" }}
-                    />
-                  ) : (
-            <>
-              <Form.Text
-                style={{ marginBottom: "10px" }}
-                className="text-light"
-              >
-                .03% Fee: {fee > 0 ? fee : "0"}
-              </Form.Text>
-              {account ? (
-                <Button
-                  type="submit"
-                  className="text-light animate-button"
-                  style={{
-                    height: "45px",
-                    backgroundColor: "#7D3CB5",
-                    border: "none",
-                  }}
+              <Spinner
+                animation="border"
+                style={{ display: "block", margin: "0 auto", color: "#CCFF00" }}
+              />
+            ) : (
+              <>
+                <Form.Text
+                  style={{ marginBottom: "10px" }}
+                  className="text-light"
                 >
-                  Swap
-                </Button>
-              ) : (
-                <Button
-                  type="submit"
-                  className="text-dark bg-light"
-                  style={{
-                    height: "45px",
-                    border: "none",
-                  }}
-                >
-                  Connect Wallet
-                </Button>
-              )}
-            </>
+                  .03% Fee: {fee > 0 ? fee : "0"}
+                </Form.Text>
+                {account ? (
+                  <Button
+                    type="submit"
+                    className="animate-button animate-button-text"
+                    style={{
+                      height: "45px",
+                      border: "none",
+                    }}
+                  >
+                    Swap
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    className="text-dark bg-light"
+                    style={{
+                      height: "45px",
+                      border: "none",
+                    }}
+                  >
+                    Connect Wallet
+                  </Button>
+                )}
+              </>
+            )}
           </Row>
         </Form>
       </Card>
