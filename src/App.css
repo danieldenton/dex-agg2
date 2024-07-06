@@ -11,8 +11,11 @@ hr {
   0% {
     background-color: #7d3cb5;
   }
-  50% {
+  33% {
     background-color: #0000ff;
+  }
+  66% {
+    background-color: #7d3cb5;
   }
   100% {
     background-color: red;

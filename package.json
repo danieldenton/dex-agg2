@@ -49,6 +49,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-    "hardhat": "^2.10.1"
+    "hardhat": "^2.10.1",
+    "typescript": "^5.5.3"
   }
 }
