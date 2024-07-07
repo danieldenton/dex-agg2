@@ -72,7 +72,7 @@ contract DexAggregator {
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
-    ) public {
+    ) public returns (bool success) {
         AMM _amm;
         IERC20 _tokenGiveContract = IERC20(_tokenGiveAddress);
         IERC20 _tokenGetContract = IERC20(_tokenGetAddress);
@@ -100,6 +100,8 @@ contract DexAggregator {
         _amm.swapToken(_tokenGiveAddress, _tokenGetAddress, _amountAfterFee);
 
         _tokenGetContract.transfer(msg.sender, tokenGetAmount);
+
+        success = true;
 
         emit Swap(
             msg.sender,

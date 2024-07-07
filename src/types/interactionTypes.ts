@@ -10,6 +10,7 @@ export type Provider = {
 
 interface DexAggConnect {
   swap(tokenGive: string, tokenGet: string, amount: BigNumber): Promise<any>;
+  withdrawTokenBalance(token: string): Promise<boolean>;
 }
 
 export type DexAgg = {

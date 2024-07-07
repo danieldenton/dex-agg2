@@ -21,9 +21,7 @@ export const Swap = () => {
   const [outputAmount, setOutputAmount] = useState(0);
   const [fee, setFee] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-
   const dispatch = useDispatch();
-
   const provider = useSelector((state: RootState) => state.provider.connection);
   const account = useSelector((state: RootState) => state.provider.account);
   const tokens = useSelector((state: RootState) => state.tokens.contracts);

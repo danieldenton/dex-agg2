@@ -7,6 +7,9 @@ import {
   swapRequest,
   swapSuccess,
   swapFail,
+  withdrawRequest,
+  withdrawSuccess,
+  withdrawFail,
 } from "./reducers/dexAggregator";
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
@@ -20,7 +23,10 @@ export const loadProvider = (dispatch: Dispatch) => {
   dispatch(setProvider(provider));
   return provider;
 };
-export const loadNetwork = async (provider: Web3Provider, dispatch: Dispatch) => {
+export const loadNetwork = async (
+  provider: Web3Provider,
+  dispatch: Dispatch
+) => {
   const { chainId } = await provider.getNetwork();
   dispatch(setNetwork(chainId));
   return chainId;
@@ -109,6 +115,29 @@ export const swap = async (
 
     dispatch(swapSuccess(transaction.hash));
   } catch (error) {
+    console.log(error);
+    dispatch(swapFail());
+  }
+};
+
+export const withdraw = async (
+  provider: Provider,
+  dexAgg: DexAgg,
+  token: string,
+  dispatch: Dispatch
+) => {
+  try {
+    dispatch(swapRequest());
+    let transaction: any;
+    const signer = await provider.getSigner();
+
+    transaction = await dexAgg.connect(signer).withdrawTokenBalance(token);
+
+    await transaction.wait();
+
+    dispatch(swapSuccess(transaction.hash));
+  } catch (error) {
+    console.log(error);
     dispatch(swapFail());
   }
 };

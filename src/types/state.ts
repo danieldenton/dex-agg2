@@ -1,4 +1,3 @@
-
 export interface ProviderState {
   connection: any;
   chainId: number;
@@ -16,9 +15,17 @@ interface Swapping {
   isSuccess: boolean;
   transactionHash: string;
 }
+
+interface Withdrawing {
+  isWithdrawing: boolean;
+  isSuccess: boolean;
+  transactionHash: string;
+}
+
 export interface DexAggregatorState {
   contract: any;
   swapping: Swapping;
+  withdrawing: Withdrawing;
 }
 
 interface Addresses {

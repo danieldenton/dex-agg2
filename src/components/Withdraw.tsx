@@ -12,18 +12,31 @@ import Spinner from "react-bootstrap/Spinner";
 
 import Alert from "./Alert";
 import { RootState } from "../types/state";
+import { loadAccount, loadBalances, swap } from "../store/interactions";
 
 const Withdraw = () => {
   const [token, setToken] = useState("");
-  const [amount, setAmount] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
-
+  const dispatch = useDispatch();
   const provider = useSelector((state: RootState) => state.provider.connection);
   const account = useSelector((state: RootState) => state.provider.account);
   const tokens = useSelector((state: RootState) => state.tokens.contracts);
   const symbols = useSelector((state: RootState) => state.tokens.symbols);
   const balances = useSelector((state: RootState) => state.tokens.balances);
   const dexAgg = useSelector((state: RootState) => state.dexAgg.contract);
+  const isWithdrawing = useSelector(
+    (state: RootState) => state.dexAgg.withdrawing.isWithdrawing
+  );
+  const isSuccess = useSelector((state: RootState) => state.dexAgg.withdrawing.isSuccess);
+  const transactionHash = useSelector(
+    (state: RootState) => state.dexAgg.withdrawing.transactionHash
+  );
+
+  const handleConnect = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await loadAccount(dispatch);
+    await loadBalances(tokens, dexAgg.address, dispatch);
+  };
 
   const handleToken = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -45,7 +58,7 @@ const Withdraw = () => {
         className="mx-auto  bg-dark"
       >
         <Form
-          onSubmit={handleWithdrawal}
+          onSubmit={account ? handleWithdrawal : handleConnect}
           style={{ maxWidth: "450px", margin: "50px auto" }}
         >
           <Row className="my-4">
@@ -82,19 +95,13 @@ const Withdraw = () => {
             </InputGroup>
           </Row>
           <Row>
-            {isSwapping ? (
+            {isWithdrawing ? (
               <Spinner
                 animation="border"
                 style={{ display: "block", margin: "0 auto", color: "#CCFF00" }}
               />
             ) : (
               <>
-                <Form.Text
-                  style={{ marginBottom: "10px" }}
-                  className="text-light"
-                >
-                  .03% Fee: {fee > 0 ? fee : "0"}
-                </Form.Text>
                 {account ? (
                   <Button
                     type="submit"
@@ -104,7 +111,7 @@ const Withdraw = () => {
                       backgroundColor: "#7d3cb5",
                     }}
                   >
-                    Swap
+                    Withdraw
                   </Button>
                 ) : (
                   <Button
@@ -123,9 +130,9 @@ const Withdraw = () => {
           </Row>
         </Form>
       </Card>
-      {isSwapping ? (
+      {isWithdrawing ? (
         <Alert
-          message={"Swap Pending..."}
+          message={"Withdraw Pending..."}
           transactionHash={null}
           variant={"info"}
           setShowAlert={setShowAlert}
