@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormHTMLAttributes, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ethers } from "ethers";
 import Card from "react-bootstrap/Card";
@@ -12,10 +12,11 @@ import Spinner from "react-bootstrap/Spinner";
 
 import { RootState } from "../types/state";
 import { loadAccount, loadBalances, swap } from "../store/interactions";
+import { FormTextProps } from "react-bootstrap";
 
 export const Swap = () => {
-  const [inputToken, setInputToken] = useState(null);
-  const [outputToken, setOutputToken] = useState(null);
+  const [inputToken, setInputToken] = useState("");
+  const [outputToken, setOutputToken] = useState("");
   const [inputAmount, setInputAmount] = useState(0);
   const [outputAmount, setOutputAmount] = useState(0);
   const [fee, setFee] = useState(0);
@@ -39,13 +40,23 @@ export const Swap = () => {
     (state: RootState) => state.dexAgg.swapping.transactionHash
   );
 
-  const handleConnect = async (e: React.ChangeEvent) => {
+  const handleConnect = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     const account = await loadAccount(dispatch);
     await loadBalances(tokens, account, dispatch);
   };
 
-  const handleInput = async (e: React.ChangeEvent<HTMLFormElement>) => {
+  const handleInputToken = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const target = e.target as HTMLButtonElement;
+    setInputToken(target.innerHTML);
+  };
+
+  const handleOutputToken = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const target = e.target as HTMLButtonElement;
+    setOutputToken(target.innerHTML);
+  };
+
+  const handleInput = async (e: React.ChangeEvent<any>) => {
     const inputValue: number = parseInt(e.target.value);
     if (e.target.value === "") {
       setInputAmount(0);
@@ -115,7 +126,9 @@ export const Swap = () => {
       return;
     }
 
-    const _inputAmount = Number(ethers.utils.parseUnits(inputAmount, "ether"))
+    const _inputAmount = Number(
+      ethers.utils.parseUnits(inputAmount.toString(), "ether")
+    );
 
     if (inputToken === "RUMP") {
       await swap(
@@ -183,14 +196,10 @@ export const Swap = () => {
                 variant="outline-light text-light bg-dark"
                 title={inputToken ? inputToken : "Select Token"}
               >
-                <Dropdown.Item
-                  onClick={(e) => setInputToken(e.target.innerHTML)}
-                >
+                <Dropdown.Item onClick={(e) => handleInputToken(e)}>
                   RUMP
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={(e) => setInputToken(e.target.innerHTML)}
-                >
+                <Dropdown.Item onClick={(e) => handleInputToken(e)}>
                   USD
                 </Dropdown.Item>
               </DropdownButton>
@@ -223,12 +232,12 @@ export const Swap = () => {
                 title={outputToken ? outputToken : "Select Token"}
               >
                 <Dropdown.Item
-                  onClick={(e) => setOutputToken(e.target.innerHTML)}
+                  onClick={(e) => handleOutputToken(e)}
                 >
                   RUMP
                 </Dropdown.Item>
                 <Dropdown.Item
-                  onClick={(e) => setOutputToken(e.target.innerHTML)}
+                  onClick={(e) => handleOutputToken(e)}
                 >
                   USD
                 </Dropdown.Item>

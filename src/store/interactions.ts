@@ -39,7 +39,6 @@ export const loadTokens = async (
   chainId: number,
   dispatch: Dispatch
 ) => {
-  console.log(provider);
   const rump = new ethers.Contract(
     config[chainId].rump.address,
     TOKEN_ABI,

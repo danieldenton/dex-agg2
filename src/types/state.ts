@@ -2,7 +2,7 @@
 export interface ProviderState {
   connection: any;
   chainId: number;
-  account: string | null;
+  account: string;
 }
 
 export interface TokensState {
