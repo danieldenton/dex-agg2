@@ -12,5 +12,6 @@ interface Ethereum {
     export function loadAccount(): void; 
     export function loadBalances(): void;
     export function swap(): void;
+    export function withdraw(): void;
   }
   

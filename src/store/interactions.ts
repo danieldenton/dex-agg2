@@ -127,17 +127,16 @@ export const withdraw = async (
   dispatch: Dispatch
 ) => {
   try {
-    dispatch(swapRequest());
+    dispatch(withdrawRequest());
     let transaction: any;
     const signer = await provider.getSigner();
 
     transaction = await dexAgg.connect(signer).withdrawTokenBalance(token);
-
     await transaction.wait();
 
-    dispatch(swapSuccess(transaction.hash));
+    dispatch(withdrawSuccess(transaction.hash));
   } catch (error) {
     console.log(error);
-    dispatch(swapFail());
+    dispatch(withdrawFail());
   }
 };

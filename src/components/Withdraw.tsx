@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ethers } from "ethers";
 import Card from "react-bootstrap/Card";
@@ -12,7 +12,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 import Alert from "./Alert";
 import { RootState } from "../types/state";
-import { loadAccount, loadBalances, swap } from "../store/interactions";
+import { loadBalances, withdraw } from "../store/interactions";
 
 const Withdraw = () => {
   const [token, setToken] = useState("");
@@ -27,16 +27,16 @@ const Withdraw = () => {
   const isWithdrawing = useSelector(
     (state: RootState) => state.dexAgg.withdrawing.isWithdrawing
   );
-  const isSuccess = useSelector((state: RootState) => state.dexAgg.withdrawing.isSuccess);
+  const isSuccess = useSelector(
+    (state: RootState) => state.dexAgg.withdrawing.isSuccess
+  );
   const transactionHash = useSelector(
     (state: RootState) => state.dexAgg.withdrawing.transactionHash
   );
 
-  const handleConnect = async (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    await loadAccount(dispatch);
-    await loadBalances(tokens, dexAgg.address, dispatch);
-  };
+  useEffect(() => {
+    loadBalances(tokens, dexAgg.address, dispatch);
+  }, []);
 
   const handleToken = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -58,7 +58,7 @@ const Withdraw = () => {
         className="mx-auto  bg-dark"
       >
         <Form
-          onSubmit={account ? handleWithdrawal : handleConnect}
+          onSubmit={handleWithdrawal}
           style={{ maxWidth: "450px", margin: "50px auto" }}
         >
           <Row className="my-4">
@@ -102,29 +102,16 @@ const Withdraw = () => {
               />
             ) : (
               <>
-                {account ? (
-                  <Button
-                    type="submit"
-                    style={{
-                      height: "45px",
-                      border: "none",
-                      backgroundColor: "#7d3cb5",
-                    }}
-                  >
-                    Withdraw
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    className="text-light bg-primary"
-                    style={{
-                      height: "45px",
-                      border: "none",
-                    }}
-                  >
-                    Connect Wallet
-                  </Button>
-                )}
+                <Button
+                  type="submit"
+                  style={{
+                    height: "45px",
+                    border: "none",
+                    backgroundColor: "#7d3cb5",
+                  }}
+                >
+                  Withdraw
+                </Button>
               </>
             )}
           </Row>
