@@ -1,11 +1,13 @@
 import React from "react";
 import { useEffect } from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import "../App.css";
 
 import Navigation from "./Navigation";
 import Swap from "./Swap";
+import Withdraw from "./Withdraw";
 
 import {
   loadProvider,
@@ -41,9 +43,14 @@ function App() {
 
   return (
     <Container className="bg-dark" style={{ height: "100%" }}>
-      <Navigation />
-      <hr />
-      <Swap />
+      <HashRouter>
+        <Navigation />
+        <hr />
+        <Routes>
+          <Route path="/" element={<Swap />} />
+          <Route path="/withdraw" element={<Withdraw />} />
+        </Routes>
+      </HashRouter>
     </Container>
   );
 }
