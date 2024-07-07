@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import { Web3Provider } from "@ethersproject/providers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
@@ -88,7 +88,7 @@ export const swap = async (
   dexAgg: DexAgg,
   tokenGive: IERC20,
   tokenGet: IERC20,
-  amount: number,
+  amount: BigNumber,
   dispatch: Dispatch
 ) => {
   try {

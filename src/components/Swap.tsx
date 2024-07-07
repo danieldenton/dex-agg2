@@ -13,7 +13,6 @@ import Spinner from "react-bootstrap/Spinner";
 import Alert from "./Alert";
 import { RootState } from "../types/state";
 import { loadAccount, loadBalances, swap } from "../store/interactions";
-import { FormTextProps } from "react-bootstrap";
 
 export const Swap = () => {
   const [inputToken, setInputToken] = useState("");
@@ -127,32 +126,35 @@ export const Swap = () => {
       return;
     }
 
-    const _inputAmount = Number(
-      ethers.utils.parseUnits(inputAmount.toString(), "ether")
-    );
+    const _inputAmount = 
+      ethers.utils.parseUnits(inputAmount.toString(), "ether");
 
-    if (inputToken === "RUMP") {
-      await swap(
-        provider,
-        dexAgg,
-        tokens[0],
-        tokens[1],
-        _inputAmount,
-        dispatch
-      );
-    } else {
-      await swap(
-        provider,
-        dexAgg,
-        tokens[1],
-        tokens[0],
-        _inputAmount,
-        dispatch
-      );
+    try {
+      if (inputToken === "RUMP") {
+        await swap(
+          provider,
+          dexAgg,
+          tokens[0],
+          tokens[1],
+          _inputAmount,
+          dispatch
+        );
+      } else {
+        await swap(
+          provider,
+          dexAgg,
+          tokens[1],
+          tokens[0],
+          _inputAmount,
+          dispatch
+        );
+      }
+
+      await loadBalances(tokens, account, dispatch);
+      setShowAlert(true);
+    } catch (err) {
+      console.error(err);
     }
-
-    await loadBalances(tokens, account, dispatch);
-    setShowAlert(true);
   };
 
   return (
@@ -232,14 +234,10 @@ export const Swap = () => {
                 variant="outline-light text-light bg-dark"
                 title={outputToken ? outputToken : "Select Token"}
               >
-                <Dropdown.Item
-                  onClick={(e) => handleOutputToken(e)}
-                >
+                <Dropdown.Item onClick={(e) => handleOutputToken(e)}>
                   RUMP
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={(e) => handleOutputToken(e)}
-                >
+                <Dropdown.Item onClick={(e) => handleOutputToken(e)}>
                   USD
                 </Dropdown.Item>
               </DropdownButton>

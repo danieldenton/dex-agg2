@@ -1,3 +1,5 @@
+import { BigNumber } from 'ethers';
+
 export type Dispatch = (action: any) => void;
 
 export type Provider = {
@@ -7,7 +9,7 @@ export type Provider = {
 };
 
 interface DexAggConnect {
-  swap(tokenGive: string, tokenGet: string, amount: number): Promise<any>;
+  swap(tokenGive: string, tokenGet: string, amount: BigNumber): Promise<any>;
 }
 
 export type DexAgg = {
@@ -16,7 +18,7 @@ export type DexAgg = {
 };
 
 interface IERC20Connect {
-  approve: (spender: string, amount: number) => Promise<boolean>;
+  approve: (spender: string, amount: BigNumber) => Promise<boolean>;
 }
 
 export interface IERC20 {
