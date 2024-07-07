@@ -10,12 +10,7 @@ import {
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
 import { Config } from "../types/state";
-import {
-  Dispatch,
-  DexAggregator,
-  Provider,
-  IERC20,
-} from "../types/interactionTypes";
+import { Dispatch, DexAgg, Provider, IERC20 } from "../types/interactionTypes";
 import configData from "../config.json";
 const config = configData as Config;
 
@@ -90,7 +85,7 @@ export const loadBalances = async (
 
 export const swap = async (
   provider: Provider,
-  dexAgg: DexAggregator,
+  dexAgg: DexAgg,
   tokenGive: IERC20,
   tokenGet: IERC20,
   amount: number,
@@ -98,7 +93,7 @@ export const swap = async (
 ) => {
   try {
     dispatch(swapRequest());
-    let transaction;
+    let transaction: any;
     const signer = await provider.getSigner();
 
     transaction = await tokenGive
