@@ -5,5 +5,12 @@ interface Ethereum {
   }
   
   interface Window {
-    ethereum?: Ethereum;
+    ethereum: Ethereum;
   }
+
+  declare module '../store/interactions' {
+    export function loadAccount(): void; 
+    export function loadBalances(): void;
+    export function swap(): void;
+  }
+  

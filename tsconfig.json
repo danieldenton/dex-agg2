@@ -10,6 +10,6 @@
     "skipLibCheck": true,
     "resolveJsonModule":true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/App.js"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/components/App.js", "src/store/interactions.ts", "global.d.ts"],
   "exclude": ["dist", "node_modules"]
 }

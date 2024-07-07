@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ethers } from "ethers";
 import Card from "react-bootstrap/Card";
@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 
+import { RootState } from "../types/state";
 import { loadAccount, loadBalances, swap } from "../store/interactions";
 
 export const Swap = () => {
@@ -17,31 +18,35 @@ export const Swap = () => {
   const [outputToken, setOutputToken] = useState(null);
   const [inputAmount, setInputAmount] = useState(0);
   const [outputAmount, setOutputAmount] = useState(0);
-  const [price, setPrice] = useState(0);
   const [fee, setFee] = useState(0);
   const [showAlert, setShowAlert] = useState(false);
 
   const dispatch = useDispatch();
 
-  const provider = useSelector((state) => state.provider.connection);
-  const account = useSelector((state) => state.provider.account);
-  const tokens = useSelector((state) => state.tokens.contracts);
-  const symbols = useSelector((state) => state.tokens.symbols);
-  const balances = useSelector((state) => state.tokens.balances);
-  const dexAgg = useSelector((state) => state.dexAgg.contract);
-  const isSwapping = useSelector((state) => state.dexAgg.swapping.isSwapping);
-  const isSuccess = useSelector((state) => state.dexAgg.swapping.isSuccess);
+  const provider = useSelector((state: RootState) => state.provider.connection);
+  const account = useSelector((state: RootState) => state.provider.account);
+  const tokens = useSelector((state: RootState) => state.tokens.contracts);
+  const symbols = useSelector((state: RootState) => state.tokens.symbols);
+  const balances = useSelector((state: RootState) => state.tokens.balances);
+  const dexAgg = useSelector((state: RootState) => state.dexAgg.contract);
+  const isSwapping = useSelector(
+    (state: RootState) => state.dexAgg.swapping.isSwapping
+  );
+  const isSuccess = useSelector(
+    (state: RootState) => state.dexAgg.swapping.isSuccess
+  );
   const transactionHash = useSelector(
-    (state) => state.dexAgg.swapping.transactionHash
+    (state: RootState) => state.dexAgg.swapping.transactionHash
   );
 
-  const handleConnect = async (e) => {
-    e.preventDefault()
+  const handleConnect = async (e: React.ChangeEvent) => {
+    e.preventDefault();
     const account = await loadAccount(dispatch);
     await loadBalances(tokens, account, dispatch);
   };
 
-  const handleInput = async (e) => {
+  const handleInput = async (e: React.ChangeEvent<HTMLFormElement>) => {
+    const inputValue: number = parseInt(e.target.value);
     if (e.target.value === "") {
       setInputAmount(0);
       setOutputAmount(0);
@@ -59,43 +64,39 @@ export const Swap = () => {
     }
     try {
       if (inputToken === "RUMP") {
-        setInputAmount(e.target.value);
+        setInputAmount(inputValue);
         const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
         const result = await dexAgg.ammSelector(
           tokens[0].address,
           tokens[1].address,
           _token1Amount
         );
-        const _token2Amount = ethers.utils.formatUnits(
-          result[1].toString(),
-          "ether"
+        const _token2Amount = Number(
+          ethers.utils.formatUnits(result[1].toString(), "ether")
         );
         const unformattedFee = await dexAgg.separateFee(_token1Amount);
 
-        const _fee = ethers.utils.formatUnits(
-          unformattedFee[1].toString(),
-          "ether"
+        const _fee = Number(
+          ethers.utils.formatUnits(unformattedFee[1].toString(), "ether")
         );
 
         setOutputAmount(_token2Amount);
         setFee(_fee);
       } else {
-        setInputAmount(e.target.value);
+        setInputAmount(inputValue);
         const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
         const result = await dexAgg.ammSelector(
           tokens[1].address,
           tokens[0].address,
           _token2Amount
         );
-        const _token1Amount = ethers.utils.formatUnits(
-          result[1].toString(),
-          "ether"
+        const _token1Amount = Number(
+          ethers.utils.formatUnits(result[1].toString(), "ether")
         );
         const unformattedFee = await dexAgg.separateFee(_token2Amount);
 
-        const _fee = ethers.utils.formatUnits(
-          unformattedFee[1].toString(),
-          "ether"
+        const _fee = Number(
+          ethers.utils.formatUnits(unformattedFee[1].toString(), "ether")
         );
 
         setOutputAmount(_token1Amount);
@@ -106,7 +107,7 @@ export const Swap = () => {
     }
   };
 
-  const handleSwap = async (e) => {
+  const handleSwap = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setShowAlert(false);
     if (inputToken === outputToken) {
@@ -114,7 +115,7 @@ export const Swap = () => {
       return;
     }
 
-    const _inputAmount = ethers.utils.parseUnits(inputAmount, "ether");
+    const _inputAmount = Number(ethers.utils.parseUnits(inputAmount, "ether"))
 
     if (inputToken === "RUMP") {
       await swap(
@@ -254,7 +255,7 @@ export const Swap = () => {
                     style={{
                       height: "45px",
                       border: "none",
-                      backgroundColor: "#7d3cb5"
+                      backgroundColor: "#7d3cb5",
                     }}
                   >
                     Swap

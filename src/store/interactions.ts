@@ -1,23 +1,36 @@
 import { ethers } from "ethers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
-import { setContract, swapRequest, swapSuccess, swapFail } from "./reducers/dexAggregator";
+import {
+  setContract,
+  swapRequest,
+  swapSuccess,
+  swapFail,
+} from "./reducers/dexAggregator";
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
-import config from "../config.json";
+import { Config } from "../types/state";
+import {
+  Dispatch,
+  DexAggregator,
+  Provider,
+  IERC20,
+} from "../types/interactionTypes";
+import configData from "../config.json";
+const config = configData as Config;
 
-export const loadProvider = (dispatch) => {
+export const loadProvider = (dispatch: Dispatch) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   dispatch(setProvider(provider));
   return provider;
 };
-export const loadNetwork = async (provider, dispatch) => {
+export const loadNetwork = async (provider: Provider, dispatch: Dispatch) => {
   const { chainId } = await provider.getNetwork();
   dispatch(setNetwork(chainId));
   return chainId;
 };
 
-export const loadAccount = async (dispatch) => {
+export const loadAccount = async (dispatch: Dispatch) => {
   const accounts = await window.ethereum.request({
     method: "eth_requestAccounts",
   });
@@ -26,7 +39,12 @@ export const loadAccount = async (dispatch) => {
   return account;
 };
 
-export const loadTokens = async (provider, chainId, dispatch) => {
+export const loadTokens = async (
+  provider: any,
+  chainId: number,
+  dispatch: Dispatch
+) => {
+  console.log(provider);
   const rump = new ethers.Contract(
     config[chainId].rump.address,
     TOKEN_ABI,
@@ -41,17 +59,25 @@ export const loadTokens = async (provider, chainId, dispatch) => {
   dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
 };
 
-export const loadDexAgg = async (provider, chainId, dispatch) => {
+export const loadDexAgg = async (
+  provider: any,
+  chainId: number,
+  dispatch: Dispatch
+) => {
   const dexAgg = new ethers.Contract(
     config[chainId].dexAggregator.address,
     DEX_AGGREGATOR_ABI,
     provider
   );
   dispatch(setContract(dexAgg));
-  return dexAgg
+  return dexAgg;
 };
 
-export const loadBalances = async (tokens, account, dispatch) => {
+export const loadBalances = async (
+  tokens: IERC20[],
+  account: string,
+  dispatch: Dispatch
+) => {
   const balance1 = await tokens[0].balanceOf(account);
   const balance2 = await tokens[1].balanceOf(account);
   dispatch(
@@ -63,19 +89,21 @@ export const loadBalances = async (tokens, account, dispatch) => {
 };
 
 export const swap = async (
-  provider,
-  dexAgg,
-  tokenGive,
-  tokenGet,
-  amount,
-  dispatch
+  provider: Provider,
+  dexAgg: DexAggregator,
+  tokenGive: IERC20,
+  tokenGet: IERC20,
+  amount: number,
+  dispatch: Dispatch
 ) => {
   try {
     dispatch(swapRequest());
     let transaction;
     const signer = await provider.getSigner();
 
-    transaction = await tokenGive.connect(signer).approve(dexAgg.address, amount);
+    transaction = await tokenGive
+      .connect(signer)
+      .approve(dexAgg.address, amount);
     await transaction.wait();
 
     transaction = await dexAgg
@@ -89,6 +117,3 @@ export const swap = async (
     dispatch(swapFail());
   }
 };
-
-
-

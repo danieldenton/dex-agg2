@@ -1,14 +1,24 @@
+
 export interface ProviderState {
+  connection: any;
   chainId: number;
   account: string | null;
 }
 
 export interface TokensState {
-  // Define tokens state properties
+  contracts: any;
+  symbols: string[];
+  balances: number[];
 }
 
+interface Swapping {
+  isSwapping: boolean;
+  isSuccess: boolean;
+  transactionHash: string;
+}
 export interface DexAggregatorState {
-  // Define dex aggregator state properties
+  contract: any;
+  swapping: Swapping;
 }
 
 interface Addresses {
@@ -20,11 +30,11 @@ interface Addresses {
 }
 
 export interface Config {
-  [key: number]: Addresses
+  [key: number]: Addresses;
 }
 
 export interface RootState {
   provider: ProviderState;
   tokens: TokensState;
-  dexAggregator: DexAggregatorState;
+  dexAgg: DexAggregatorState;
 }
