@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ethers } from "ethers";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -19,7 +18,6 @@ const Withdraw = () => {
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
   const provider = useSelector((state: RootState) => state.provider.connection);
-  const account = useSelector((state: RootState) => state.provider.account);
   const tokens = useSelector((state: RootState) => state.tokens.contracts);
   const symbols = useSelector((state: RootState) => state.tokens.symbols);
   const balances = useSelector((state: RootState) => state.tokens.balances);
@@ -45,6 +43,15 @@ const Withdraw = () => {
 
   const handleWithdrawal = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+        if (token === symbols[0]) {
+            await withdraw(provider, dexAgg, tokens[0].address, dispatch)
+        } else {
+            await withdraw(provider, dexAgg, tokens[1].address, dispatch)
+        }
+    } catch (error) {
+        console.log(error)
+    }
   };
 
   return (

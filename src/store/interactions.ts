@@ -115,7 +115,6 @@ export const swap = async (
 
     dispatch(swapSuccess(transaction.hash));
   } catch (error) {
-    console.log(error);
     dispatch(swapFail());
   }
 };
@@ -136,7 +135,6 @@ export const withdraw = async (
 
     dispatch(withdrawSuccess(transaction.hash));
   } catch (error) {
-    console.log(error);
     dispatch(withdrawFail());
   }
 };
