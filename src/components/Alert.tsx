@@ -15,6 +15,7 @@ const Alert = ({ message, transactionHash, variant, setShowAlert }: Props) => {
       onClose={() => setShowAlert(false)}
       dismissible
       className="alert"
+      style={{ maxWidth: '270px', maxHeight: '150px'}}
     >
       <BootstrapAlert.Heading>{message}</BootstrapAlert.Heading>
       <hr />
