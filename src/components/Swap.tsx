@@ -285,7 +285,7 @@ export const Swap = () => {
           </Row>
         </Form>
       </Card>
-      {/* {isSwapping ? (
+      {isSwapping ? (
             <Alert
               message={"Swap Pending..."}
               transactionHash={null}
@@ -308,7 +308,7 @@ export const Swap = () => {
             />
           ) : (
             <></>
-          )} */}
+          )}
     </div>
   );
 };
