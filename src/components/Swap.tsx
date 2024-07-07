@@ -10,6 +10,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Spinner from "react-bootstrap/Spinner";
 
+import Alert from "./Alert";
 import { RootState } from "../types/state";
 import { loadAccount, loadBalances, swap } from "../store/interactions";
 import { FormTextProps } from "react-bootstrap";

@@ -3,7 +3,7 @@ export type Dispatch = (action: any) => void;
 export type Provider = {
   getNetwork: () => Promise<{ chainId: number }>;
   getSigner: () => Promise<{ address: string }>;
-  chainId: number;
+ 
 };
 
 interface DexAggConnect {

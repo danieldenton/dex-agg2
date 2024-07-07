@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import { Web3Provider } from "@ethersproject/providers";
 import { setProvider, setNetwork, setAccount } from "./reducers/provider";
 import { setContracts, setSymbols, balancesLoaded } from "./reducers/tokens";
 import {
@@ -19,7 +20,7 @@ export const loadProvider = (dispatch: Dispatch) => {
   dispatch(setProvider(provider));
   return provider;
 };
-export const loadNetwork = async (provider: Provider, dispatch: Dispatch) => {
+export const loadNetwork = async (provider: Web3Provider, dispatch: Dispatch) => {
   const { chainId } = await provider.getNetwork();
   dispatch(setNetwork(chainId));
   return chainId;
