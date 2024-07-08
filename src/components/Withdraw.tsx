@@ -34,7 +34,7 @@ const Withdraw = () => {
 
   useEffect(() => {
     loadBalances(tokens, dexAgg.address, dispatch);
-  }, []);
+  });
 
   const handleToken = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
@@ -59,6 +59,7 @@ const Withdraw = () => {
       <Card
         style={{
           maxWidth: "550px",
+          height: "392px",
           borderRadius: "5%",
           border: "solid 4px #7D3CB5",
         }}
@@ -115,6 +116,7 @@ const Withdraw = () => {
                     height: "45px",
                     border: "none",
                     backgroundColor: "#7d3cb5",
+                    marginTop: '34px'
                   }}
                 >
                   Withdraw

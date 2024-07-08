@@ -10,7 +10,7 @@ import configData from "../config.json";
 const Navigation = () => {
   const chainId = useSelector((state: RootState) => state.provider.chainId);
   const account = useSelector((state: RootState) => state.provider.account);
-  const config = configData as Config
+  const config = configData as Config;
 
   const handleNetwork = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (window.ethereum) {
@@ -29,7 +29,7 @@ const Navigation = () => {
   };
 
   return (
-    <Navbar className="my-3 bg-dark" expand="lg" style={{ minHeight: "80px" }}>
+    <Navbar className="my-3 bg-dark d-flex justify-content-between" expand="lg" style={{ minHeight: "80px" }}>
       <Navbar.Brand className="fw-bold" style={{ color: "#CCFF00" }}>
         Dex Aggregator
       </Navbar.Brand>

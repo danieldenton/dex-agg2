@@ -16,6 +16,7 @@ async function main() {
 
   const { chainId } = await hre.ethers.provider.getNetwork();
 
+  console.log(`Deployer address: ${deployer.address}`)
   //Tokens and distribution
   const rump = await hre.ethers.getContractAt(
     "Token",
@@ -46,23 +47,6 @@ async function main() {
     .connect(deployer)
     .transfer(investor4.address, tokens(20));
   await transaction.wait();
-
-  let investor1RumpBalance,
-    investor3RumpBalance,
-    investor2USDBalance,
-    investor4USDBalance;
-
-  investor1RumpBalance = await rump.balanceOf(investor1.address);
-  investor3RumpBalance = await rump.balanceOf(investor3.address);
-  investor2USDBalance = await usd.balanceOf(investor2.address);
-  investor4USDBalance = await usd.balanceOf(investor4.address);
-
-  console.log(
-    investor1RumpBalance,
-    investor2USDBalance,
-    investor3RumpBalance,
-    investor4USDBalance
-  );
 
   // Blood Moon seed
   let amount = tokens(100);

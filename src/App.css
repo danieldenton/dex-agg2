@@ -4,7 +4,10 @@ body {
 
 hr {
   color: white;
-  margin-bottom: 60px;
+}
+
+.hr {
+  margin-bottom: 88px;
 }
 
 @keyframes colorChange {
