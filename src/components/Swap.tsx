@@ -124,8 +124,10 @@ export const Swap = () => {
       return;
     }
 
-    const _inputAmount = 
-      ethers.utils.parseUnits(inputAmount.toString(), "ether");
+    const _inputAmount = ethers.utils.parseUnits(
+      inputAmount.toString(),
+      "ether"
+    );
 
     try {
       if (inputToken === "RUMP") {
@@ -253,7 +255,7 @@ export const Swap = () => {
                   style={{ marginBottom: "10px" }}
                   className="text-light"
                 >
-                  .03% Fee: {fee > 0 ? fee : "0"}
+                  .03% Fee: {fee > 0 ? `${fee} ${inputToken}` : "0"}
                 </Form.Text>
                 {account ? (
                   <Button
@@ -284,29 +286,29 @@ export const Swap = () => {
         </Form>
       </Card>
       {isSwapping ? (
-            <Alert
-              message={"Swap Pending..."}
-              transactionHash={null}
-              variant={"info"}
-              setShowAlert={setShowAlert}
-            />
-          ) : isSuccess && showAlert ? (
-            <Alert
-              message={"Swap Successful"}
-              transactionHash={transactionHash}
-              variant={"success"}
-              setShowAlert={setShowAlert}
-            />
-          ) : !isSuccess && showAlert ? (
-            <Alert
-              message={"Swap Failed"}
-              transactionHash={null}
-              variant={"light"}
-              setShowAlert={setShowAlert}
-            />
-          ) : (
-            <></>
-          )}
+        <Alert
+          message={"Swap Pending..."}
+          transactionHash={null}
+          variant={"info"}
+          setShowAlert={setShowAlert}
+        />
+      ) : isSuccess && showAlert ? (
+        <Alert
+          message={"Swap Successful"}
+          transactionHash={transactionHash}
+          variant={"success"}
+          setShowAlert={setShowAlert}
+        />
+      ) : !isSuccess && showAlert ? (
+        <Alert
+          message={"Swap Failed"}
+          transactionHash={null}
+          variant={"light"}
+          setShowAlert={setShowAlert}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
