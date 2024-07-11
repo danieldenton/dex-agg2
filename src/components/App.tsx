@@ -22,7 +22,9 @@ import {
 function App() {
   const account = useSelector((state: RootState) => state.provider.account);
   const ownerAddress =
-    process.env.OWNER_ADDRESS_SEPOLIA || process.env.OWNER_ADRESS_HARDHAT;
+    process.env.REACT_APP_OWNER_ADDRESS_LOCALHOST ||
+    process.env.REACT_APP_OWNER_ADDRESS_SEPOLIA;
+    console.log(ownerAddress, account)
   const dispatch = useDispatch();
 
   const loadBlockchainData = async () => {
