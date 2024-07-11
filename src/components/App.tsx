@@ -21,7 +21,7 @@ import {
 
 function App() {
   const account = useSelector((state: RootState) => state.provider.account);
-  const oa ="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+  const ownerAddress = process.env.OWNER_ADDRESS_SEPOLIA || process.env.OWNER_ADRESS_HARDHAT
   const dispatch = useDispatch();
 
   const loadBlockchainData = async () => {
@@ -49,8 +49,8 @@ function App() {
     <Container className="bg-dark" style={{ height: "100%" }}>
       <HashRouter>
         <Navigation />
-        <hr className={account === oa ? "" : "hr"}/>
-        {account === oa ?
+        <hr className={account === ownerAddress ? "" : "hr"}/>
+        {account === ownerAddress ?
         <Tabs /> : null}
         <Routes>
           <Route path="/" element={<Swap />} />
