@@ -1,6 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
-const privateKeys = process.env.PRIVATE_KEY || "";
-
+require('dotenv').config();
+const privateKey = process.env.PRIVATE_KEY || "";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
     localhost: {},
     sepolia: {
       url: `https://eth-sepolia.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
-      accounts: privateKeys.split(","),
+      accounts: [privateKey],
     },
   },
 };
