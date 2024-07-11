@@ -42,7 +42,7 @@ export const loadAccount = async (dispatch: Dispatch) => {
 };
 
 export const loadTokens = async (
-  provider: any,
+  provider: Web3Provider,
   chainId: number,
   dispatch: Dispatch
 ) => {
