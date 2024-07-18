@@ -90,6 +90,7 @@ var loadTokens = function (provider, chainId, dispatch) { return __awaiter(void 
         switch (_d.label) {
             case 0:
                 config = chainId === 11155111 ? seploiaConfig_json_1.default : localhostConfig_json_1.default;
+                console.log(config[chainId].rump.address);
                 rump = new ethers_1.ethers.Contract(config[chainId].rump.address, Token_json_1.default, provider);
                 usd = new ethers_1.ethers.Contract(config[chainId].usd.address, Token_json_1.default, provider);
                 dispatch((0, tokens_1.setContracts)([rump, usd]));
