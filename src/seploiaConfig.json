@@ -11,7 +11,10 @@
       },
       "bloodMoonSwap": {
         "address": "0x284A83712a1eef1F4D6f90011F17b1F492C3BCeF"
-      }
+      },
+      "dexAggregator": {
+      "address": "0xa975Cfe1BDc9F9dae5FB2C92Fbaa53Cf3ae6C70d"
+    }
     }
   }
   
