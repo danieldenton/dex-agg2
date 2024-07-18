@@ -11,7 +11,7 @@ import localhostData from "../localhostConfig.json";
 const Navigation = () => {
   const chainId = useSelector((state: RootState) => state.provider.chainId);
   const account = useSelector((state: RootState) => state.provider.account);
-  let config: Config = chainId === 11155111 ? sepoliaData : localhostData;
+  const config: Config = chainId === 11155111 ? sepoliaData : localhostData;
 
   const handleNetwork = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (window.ethereum) {
