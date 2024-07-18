@@ -44,11 +44,12 @@ var react_redux_1 = require("react-redux");
 var Navbar_1 = __importDefault(require("react-bootstrap/Navbar"));
 var Form_1 = __importDefault(require("react-bootstrap/Form"));
 var react_blockies_1 = __importDefault(require("react-blockies"));
-var config_json_1 = __importDefault(require("../config.json"));
+var seploiaConfig_json_1 = __importDefault(require("../seploiaConfig.json"));
+var localhostConfig_json_1 = __importDefault(require("../localhostConfig.json"));
 var Navigation = function () {
     var chainId = (0, react_redux_1.useSelector)(function (state) { return state.provider.chainId; });
     var account = (0, react_redux_1.useSelector)(function (state) { return state.provider.account; });
-    var config = config_json_1.default;
+    var config = chainId === 11155111 ? seploiaConfig_json_1.default : localhostConfig_json_1.default;
     var handleNetwork = function (e) { return __awaiter(void 0, void 0, void 0, function () {
         var err_1;
         return __generator(this, function (_a) {

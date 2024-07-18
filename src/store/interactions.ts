@@ -48,6 +48,7 @@ export const loadTokens = async (
   dispatch: Dispatch
 ) => {
   config = chainId === 11155111 ? sepoliaData : localhostData;
+  console.log(config[chainId].rump.address)
   const rump = new ethers.Contract(
     config[chainId].rump.address,
     TOKEN_ABI,

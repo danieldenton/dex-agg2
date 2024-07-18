@@ -46,8 +46,9 @@ var tokens_1 = require("./reducers/tokens");
 var dexAggregator_1 = require("./reducers/dexAggregator");
 var DexAggregator_json_1 = __importDefault(require("../abis/DexAggregator.json"));
 var Token_json_1 = __importDefault(require("../abis/Token.json"));
-var config_json_1 = __importDefault(require("../config.json"));
-var config = config_json_1.default;
+var localhostConfig_json_1 = __importDefault(require("../localhostConfig.json"));
+var seploiaConfig_json_1 = __importDefault(require("../seploiaConfig.json"));
+var config;
 var loadProvider = function (dispatch) {
     var provider = new ethers_1.ethers.providers.Web3Provider(window.ethereum);
     dispatch((0, provider_1.setProvider)(provider));
@@ -88,6 +89,7 @@ var loadTokens = function (provider, chainId, dispatch) { return __awaiter(void 
     return __generator(this, function (_d) {
         switch (_d.label) {
             case 0:
+                config = chainId === 11155111 ? seploiaConfig_json_1.default : localhostConfig_json_1.default;
                 rump = new ethers_1.ethers.Contract(config[chainId].rump.address, Token_json_1.default, provider);
                 usd = new ethers_1.ethers.Contract(config[chainId].usd.address, Token_json_1.default, provider);
                 dispatch((0, tokens_1.setContracts)([rump, usd]));
@@ -107,6 +109,7 @@ exports.loadTokens = loadTokens;
 var loadDexAgg = function (provider, chainId, dispatch) { return __awaiter(void 0, void 0, void 0, function () {
     var dexAgg;
     return __generator(this, function (_a) {
+        config = chainId === 11155111 ? seploiaConfig_json_1.default : localhostConfig_json_1.default;
         dexAgg = new ethers_1.ethers.Contract(config[chainId].dexAggregator.address, DexAggregator_json_1.default, provider);
         dispatch((0, dexAggregator_1.setContract)(dexAgg));
         return [2 /*return*/, dexAgg];
