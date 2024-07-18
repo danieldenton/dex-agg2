@@ -7,8 +7,13 @@
 const hre = require("hardhat");
 
 async function main() {
-const DEX_AGGREGATOR = await hre.ethers.getContractFactory("DexAggregator");
-  let dexAggregator = await DEX_AGGREGATOR.deploy(bloodMoonSwap.address, cloudSwap.address);
+  const cloudSwap = "0xa1C9B19F42d9Db15E95e06218257F36b2eD0467D";
+  const bloodMoonSwap = "0x284A83712a1eef1F4D6f90011F17b1F492C3BCeF";
+  const DEX_AGGREGATOR = await hre.ethers.getContractFactory("DexAggregator");
+  let dexAggregator = await DEX_AGGREGATOR.deploy(
+    bloodMoonSwap,
+    cloudSwap
+  );
   await dexAggregator.deployed();
   console.log(`Dex Aggregator deployed to: ${dexAggregator.address}\n`);
 }
