@@ -53,9 +53,10 @@ var interactions_1 = require("../store/interactions");
 function App() {
     var _this = this;
     var account = (0, react_redux_1.useSelector)(function (state) { return state.provider.account; });
-    var ownerAddress = process.env.REACT_APP_OWNER_ADDRESS_LOCALHOST ||
-        process.env.REACT_APP_OWNER_ADDRESS_SEPOLIA;
-    console.log(ownerAddress, account);
+    var chainId = (0, react_redux_1.useSelector)(function (state) { return state.provider.chainId; });
+    var locahostOwnerAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+    var sepoliaOwnerAddres = "0x10a845E3ff30B4c88aF9E097f092382BfFC0b7eb";
+    var ownerAddress = chainId === 11155111 ? sepoliaOwnerAddres : locahostOwnerAddress;
     var dispatch = (0, react_redux_1.useDispatch)();
     var loadBlockchainData = function () { return __awaiter(_this, void 0, void 0, function () {
         var provider, chainId;
