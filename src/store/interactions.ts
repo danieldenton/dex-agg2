@@ -15,8 +15,9 @@ import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
 import TOKEN_ABI from "../abis/Token.json";
 import { Config } from "../types/state";
 import { Dispatch, DexAgg, Provider, IERC20 } from "../types/interactionTypes";
-import configData from "../config.json";
-const config = configData as Config;
+import localhostData from "../localhostConfig.json";
+import sepoliaData from "../seploiaConfig.json"
+let config: Config;
 
 export const loadProvider = (dispatch: Dispatch) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -46,6 +47,7 @@ export const loadTokens = async (
   chainId: number,
   dispatch: Dispatch
 ) => {
+  config = chainId === 11155111 ? sepoliaData : localhostData;
   const rump = new ethers.Contract(
     config[chainId].rump.address,
     TOKEN_ABI,
@@ -65,6 +67,7 @@ export const loadDexAgg = async (
   chainId: number,
   dispatch: Dispatch
 ) => {
+  config = chainId === 11155111 ? sepoliaData : localhostData;
   const dexAgg = new ethers.Contract(
     config[chainId].dexAggregator.address,
     DEX_AGGREGATOR_ABI,
