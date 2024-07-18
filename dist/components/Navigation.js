@@ -78,7 +78,7 @@ var Navigation = function () {
             }
         });
     }); };
-    return (react_1.default.createElement(Navbar_1.default, { className: "my-3 bg-dark", expand: "lg", style: { minHeight: "80px" } },
+    return (react_1.default.createElement(Navbar_1.default, { className: "my-3 bg-dark d-flex justify-content-between", expand: "lg", style: { minHeight: "80px" } },
         react_1.default.createElement(Navbar_1.default.Brand, { className: "fw-bold", style: { color: "#CCFF00" } }, "Dex Aggregator"),
         react_1.default.createElement(Navbar_1.default.Toggle, { "aria-controls": "nav" }),
         react_1.default.createElement(Navbar_1.default.Collapse, { id: "nav", className: "justify-content-end" },

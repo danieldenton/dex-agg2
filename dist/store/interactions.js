@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.swap = exports.loadBalances = exports.loadDexAgg = exports.loadTokens = exports.loadAccount = exports.loadNetwork = exports.loadProvider = void 0;
+exports.withdraw = exports.swap = exports.loadBalances = exports.loadDexAgg = exports.loadTokens = exports.loadAccount = exports.loadNetwork = exports.loadProvider = void 0;
 var ethers_1 = require("ethers");
 var provider_1 = require("./reducers/provider");
 var tokens_1 = require("./reducers/tokens");
@@ -170,3 +170,31 @@ var swap = function (provider, dexAgg, tokenGive, tokenGet, amount, dispatch) { 
     });
 }); };
 exports.swap = swap;
+var withdraw = function (provider, dexAgg, token, dispatch) { return __awaiter(void 0, void 0, void 0, function () {
+    var transaction, signer, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 4, , 5]);
+                dispatch((0, dexAggregator_1.withdrawRequest)());
+                transaction = void 0;
+                return [4 /*yield*/, provider.getSigner()];
+            case 1:
+                signer = _a.sent();
+                return [4 /*yield*/, dexAgg.connect(signer).withdrawTokenBalance(token)];
+            case 2:
+                transaction = _a.sent();
+                return [4 /*yield*/, transaction.wait()];
+            case 3:
+                _a.sent();
+                dispatch((0, dexAggregator_1.withdrawSuccess)(transaction.hash));
+                return [3 /*break*/, 5];
+            case 4:
+                error_2 = _a.sent();
+                dispatch((0, dexAggregator_1.withdrawFail)());
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.withdraw = withdraw;

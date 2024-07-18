@@ -41,14 +41,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var react_1 = __importDefault(require("react"));
 var react_2 = require("react");
+var react_router_dom_1 = require("react-router-dom");
 var react_bootstrap_1 = require("react-bootstrap");
 var react_redux_1 = require("react-redux");
 require("../App.css");
 var Navigation_1 = __importDefault(require("./Navigation"));
+var Tabs_1 = __importDefault(require("./Tabs"));
 var Swap_1 = __importDefault(require("./Swap"));
+var Withdraw_1 = __importDefault(require("./Withdraw"));
 var interactions_1 = require("../store/interactions");
 function App() {
     var _this = this;
+    var account = (0, react_redux_1.useSelector)(function (state) { return state.provider.account; });
+    var ownerAddress = process.env.REACT_APP_OWNER_ADDRESS_LOCALHOST ||
+        process.env.REACT_APP_OWNER_ADDRESS_SEPOLIA;
+    console.log(ownerAddress, account);
     var dispatch = (0, react_redux_1.useDispatch)();
     var loadBlockchainData = function () { return __awaiter(_this, void 0, void 0, function () {
         var provider, chainId;
@@ -85,10 +92,14 @@ function App() {
     }); };
     (0, react_2.useEffect)(function () {
         loadBlockchainData();
-    }, []);
+    });
     return (react_1.default.createElement(react_bootstrap_1.Container, { className: "bg-dark", style: { height: "100%" } },
-        react_1.default.createElement(Navigation_1.default, null),
-        react_1.default.createElement("hr", null),
-        react_1.default.createElement(Swap_1.default, null)));
+        react_1.default.createElement(react_router_dom_1.HashRouter, null,
+            react_1.default.createElement(Navigation_1.default, null),
+            react_1.default.createElement("hr", { className: account === ownerAddress ? "" : "hr" }),
+            account === ownerAddress ? react_1.default.createElement(Tabs_1.default, null) : null,
+            react_1.default.createElement(react_router_dom_1.Routes, null,
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/", element: react_1.default.createElement(Swap_1.default, null) }),
+                react_1.default.createElement(react_router_dom_1.Route, { path: "/withdraw", element: react_1.default.createElement(Withdraw_1.default, null) })))));
 }
 exports.default = App;

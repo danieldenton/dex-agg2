@@ -258,7 +258,7 @@ var Swap = function () {
                 react_1.default.createElement(Row_1.default, null, isSwapping ? (react_1.default.createElement(Spinner_1.default, { animation: "border", style: { display: "block", margin: "0 auto", color: "#CCFF00" } })) : (react_1.default.createElement(react_1.default.Fragment, null,
                     react_1.default.createElement(Form_1.default.Text, { style: { marginBottom: "10px" }, className: "text-light" },
                         ".03% Fee: ",
-                        fee > 0 ? fee : "0"),
+                        fee > 0 ? "".concat(fee, " ").concat(inputToken) : "0"),
                     account ? (react_1.default.createElement(Button_1.default, { type: "submit", style: {
                             height: "45px",
                             border: "none",
