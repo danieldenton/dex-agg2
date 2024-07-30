@@ -204,6 +204,9 @@ var Swap = function () {
                 case 5: return [4 /*yield*/, (0, interactions_1.loadBalances)(tokens, account, dispatch)];
                 case 6:
                     _a.sent();
+                    setInputAmount(0);
+                    setOutputAmount(0);
+                    setFee(0);
                     setShowAlert(true);
                     return [3 /*break*/, 8];
                 case 7:

@@ -151,6 +151,9 @@ export const Swap = () => {
       }
 
       await loadBalances(tokens, account, dispatch);
+      setInputAmount(0)
+      setOutputAmount(0)
+      setFee(0)
       setShowAlert(true);
     } catch (err) {
       console.error(err);
