@@ -1,5 +1,5 @@
 {
-  "name": "DexAggregator",
+  "name": "DexAggregator2",
   "author": "danielmdenton@gmail.com",
   "version": "1.0.0",
   "description": "",
@@ -8,6 +8,8 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@uniswap/v3-core": "^1.0.1",
+    "@uniswap/v3-periphery": "^1.4.4",
     "bootstrap": "^5.2.0",
     "dotenv": "^16.4.5",
     "lodash": "^4.17.21",
