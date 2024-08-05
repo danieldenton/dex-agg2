@@ -9,7 +9,6 @@ module.exports = {
   networks: {
     hardhat: {
       forking: {
-        chainId: 31337,
         url: `https://arb-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         blockNumber: 223528000
       },
