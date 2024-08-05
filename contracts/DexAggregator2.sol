@@ -26,7 +26,7 @@ contract DexAggregator2 {
         amountAfterFee = _amount - fee;
     }
 
-    function ammSelector(
+    function dexSelector(
         address _tokenGiveAddress,
         address _tokenGetAddress,
         uint256 _amount
