@@ -18,6 +18,41 @@ contract DexAggregator2 {
         swapRouter = _swapRouter;
     }
 
+
+    function separateFee(
+        uint256 _amount
+    ) public pure returns (uint256 amountAfterFee, uint256 fee) {
+        fee = (_amount * 3) / 10000; // .03% fee
+        amountAfterFee = _amount - fee;
+    }
+
+    function ammSelector(
+        address _tokenGiveAddress,
+        address _tokenGetAddress,
+        uint256 _amount
+    ) public view returns (address chosenAMM, uint256 returnAmount) {
+        (uint256 _amountAfterFee, ) = separateFee(_amount);
+
+        (uint256 amm1Return, ) = amm1.calculateTokenSwap(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amountAfterFee
+        );
+        (uint256 amm2Return, ) = amm2.calculateTokenSwap(
+            _tokenGiveAddress,
+            _tokenGetAddress,
+            _amountAfterFee
+        );
+
+        if (amm1Return > amm2Return) {
+            chosenAMM = address(amm1);
+            returnAmount = amm1Return;
+        } else {
+            chosenAMM = address(amm2);
+            returnAmount = amm2Return;
+        }
+    }
+
     function swapWETHForDAI(uint256 amountIn) external returns (uint256 amountOut) {
 
         // Transfer the specified amount of WETH9 to this contract.
