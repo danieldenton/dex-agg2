@@ -114,7 +114,7 @@ describe("Dex Aggregator", () => {
   });
   describe("Finds the Best Price Between AMMs", () => {
     it("finds the best amm for your token1 swap", async () => {
-      const [chosenAMM, returnAmount] = await dexAggregator.ammSelector(
+      const [chosenAMM, returnAmount] = await dexAggregator.dexSelector(
         token1.address,
         token2.address,
         amount
@@ -123,7 +123,7 @@ describe("Dex Aggregator", () => {
       expect(returnAmount).to.equal(amm2Token2ReturnAmount);
     });
     it("finds the best amm for your token2 swap", async () => {
-      const [chosenAMM, returnAmount] = await dexAggregator.ammSelector(
+      const [chosenAMM, returnAmount] = await dexAggregator.dexSelector(
         token2.address,
         token1.address,
         amount
@@ -205,7 +205,7 @@ describe("Dex Aggregator", () => {
         );
       });
       it("emits a Swap event", async () => {
-        const [chosenAMM, returnAmount] = await dexAggregator.ammSelector(
+        const [chosenAMM, returnAmount] = await dexAggregator.dexSelector(
           token1.address,
           token2.address,
           amount

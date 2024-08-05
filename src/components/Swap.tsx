@@ -75,7 +75,7 @@ export const Swap = () => {
       if (inputToken === "RUMP") {
         setInputAmount(inputValue);
         const _token1Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.ammSelector(
+        const result = await dexAgg.dexSelector(
           tokens[0].address,
           tokens[1].address,
           _token1Amount
@@ -94,7 +94,7 @@ export const Swap = () => {
       } else {
         setInputAmount(inputValue);
         const _token2Amount = ethers.utils.parseUnits(e.target.value, "ether");
-        const result = await dexAgg.ammSelector(
+        const result = await dexAgg.dexSelector(
           tokens[1].address,
           tokens[0].address,
           _token2Amount

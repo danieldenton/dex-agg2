@@ -143,7 +143,7 @@ var Swap = function () {
                     if (!(inputToken === "RUMP")) return [3 /*break*/, 4];
                     setInputAmount(inputValue);
                     _token1Amount = ethers_1.ethers.utils.parseUnits(e.target.value, "ether");
-                    return [4 /*yield*/, dexAgg.ammSelector(tokens[0].address, tokens[1].address, _token1Amount)];
+                    return [4 /*yield*/, dexAgg.dexSelector(tokens[0].address, tokens[1].address, _token1Amount)];
                 case 2:
                     result = _a.sent();
                     _token2Amount = Number(ethers_1.ethers.utils.formatUnits(result[1].toString(), "ether"));
@@ -157,7 +157,7 @@ var Swap = function () {
                 case 4:
                     setInputAmount(inputValue);
                     _token2Amount = ethers_1.ethers.utils.parseUnits(e.target.value, "ether");
-                    return [4 /*yield*/, dexAgg.ammSelector(tokens[1].address, tokens[0].address, _token2Amount)];
+                    return [4 /*yield*/, dexAgg.dexSelector(tokens[1].address, tokens[0].address, _token2Amount)];
                 case 5:
                     result = _a.sent();
                     _token1Amount = Number(ethers_1.ethers.utils.formatUnits(result[1].toString(), "ether"));
