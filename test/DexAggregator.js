@@ -29,54 +29,6 @@ describe("Dex Aggregator", () => {
   beforeEach(async () => {
     accounts = await ethers.getSigners();
     deployer = accounts[0];
-    liquidityProvider = accounts[1];
-    investor1 = accounts[2];
-    investor2 = accounts[3];
-
-    const Token = await ethers.getContractFactory("Token");
-    token1 = await Token.deploy("Rumpelina", "RUMP", "1000000");
-    token2 = await Token.deploy("Darkness", "DRKN", "1000000");
-
-    // transfer tokens to investors
-    transaction = await token1
-      .connect(deployer)
-      .transfer(investor1.address, tokens(100000));
-    await transaction.wait();
-    transaction = await token2
-      .connect(deployer)
-      .transfer(investor2.address, tokens(100000));
-    await transaction.wait();
-
-    const AMM = await ethers.getContractFactory("AMM");
-    amm1 = await AMM.deploy(token1.address, token2.address);
-    amm2 = await AMM.deploy(token1.address, token2.address);
-
-    // add liquidity to AMMs
-    amount = tokens(100000);
-    // AMM1
-    transaction = await token1.connect(deployer).approve(amm1.address, amount);
-    await transaction.wait();
-    transaction = await token2.connect(deployer).approve(amm1.address, amount);
-    await transaction.wait();
-    transaction = await amm1.connect(deployer).addLiquidity(amount, amount);
-    await transaction.wait();
-    // AMM2
-    transaction = await token1.connect(deployer).approve(amm2.address, amount);
-    await transaction.wait();
-    transaction = await token2.connect(deployer).approve(amm2.address, amount);
-    await transaction.wait();
-    transaction = await amm2.connect(deployer).addLiquidity(amount, amount);
-    await transaction.wait();
-
-    // create a swap on AMM1 which will make token1 cheaper on AMM1 ... with enough of a traded anyhow.
-    transaction = await token1
-      .connect(investor1)
-      .approve(amm1.address, tokens(1));
-    await transaction.wait();
-    transaction = await amm1
-      .connect(investor1)
-      .swapToken(token1.address, token2.address, tokens(1));
-    await transaction.wait();
 
     const DEX_AGGREGATOR = await ethers.getContractFactory("DexAggregator");
     dexAggregator = await DEX_AGGREGATOR.deploy(amm1.address, amm2.address);
