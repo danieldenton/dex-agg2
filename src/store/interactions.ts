@@ -12,12 +12,8 @@ import {
   withdrawFail,
 } from "./reducers/dexAggregator";
 import DEX_AGGREGATOR_ABI from "../abis/DexAggregator.json";
-import TOKEN_ABI from "../abis/Token.json";
-import { Config } from "../types/state";
 import { Dispatch, DexAgg, Provider, IERC20 } from "../types/interactionTypes";
-import localhostData from "../localhostConfig.json";
-import sepoliaData from "../seploiaConfig.json"
-let config: Config;
+import config from "../config.json";
 
 export const loadProvider = (dispatch: Dispatch) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -42,32 +38,31 @@ export const loadAccount = async (dispatch: Dispatch) => {
   return account;
 };
 
-export const loadTokens = async (
-  provider: Web3Provider,
-  chainId: number,
-  dispatch: Dispatch
-) => {
-  config = chainId === 11155111 ? sepoliaData : localhostData;
-  const rump = new ethers.Contract(
-    config[chainId].rump.address,
-    TOKEN_ABI,
-    provider
-  );
-  const usd = new ethers.Contract(
-    config[chainId].usd.address,
-    TOKEN_ABI,
-    provider
-  );
-  dispatch(setContracts([rump, usd]));
-  dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
-};
+// export const loadTokens = async (
+//   provider: Web3Provider,
+//   chainId: number,
+//   dispatch: Dispatch
+// ) => {
+//   config = chainId === 11155111 ? sepoliaData : localhostData;
+//   const rump = new ethers.Contract(
+//     config[chainId].rump.address,
+//     TOKEN_ABI,
+//     provider
+//   );
+//   const usd = new ethers.Contract(
+//     config[chainId].usd.address,
+//     TOKEN_ABI,
+//     provider
+//   );
+//   dispatch(setContracts([rump, usd]));
+//   dispatch(setSymbols([await rump.symbol(), await usd.symbol()]));
+// };
 
 export const loadDexAgg = async (
   provider: any,
   chainId: number,
   dispatch: Dispatch
 ) => {
-  config = chainId === 11155111 ? sepoliaData : localhostData;
   const dexAgg = new ethers.Contract(
     config[chainId].dexAggregator.address,
     DEX_AGGREGATOR_ABI,
