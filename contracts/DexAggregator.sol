@@ -27,12 +27,12 @@ contract DexAggregator {
     }
 
     function dexSelector(
-        address _tokenGiveAddress,
+        address[] memory _path,
         uint256 _amount
     ) public view returns (address chosenDex, uint256 returnAmount) {
         (uint256 _amountAfterFee, ) = separateFee(_amount);
 
-        amountOut = swapRouter.
+        returnAmount = swapRouter.
 
         (uint256 amm1Return, ) = amm1.calculateTokenSwap(
             _tokenGiveAddress,

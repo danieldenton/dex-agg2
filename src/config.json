@@ -1,19 +1,12 @@
 {
-  "31337": {
-    "rump": {
-      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-    },
-    "usd": {
-      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-    },
-    "bloodMoonSwap": {
-      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-    },
-    "cloudSwap": {
-      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-    },
-    "dexAggregator": {
-      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
-    }
+  "UNISWAP": {
+    "QUOTER_V3": "0x61fFE014bA17989E743c5F6cB21bF9697530B21e",
+    "FACTORY_V3": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+    "ROUTER_V3": "0xE592427A0AEce92De3Edee1F18E0157C05861564"
+  },
+  "PANCAKESWAP": {
+    "QUOTER_V3": "0xB048Bbc1Ee6b733FFfCFb9e9CeF7375518e25997",
+    "FACTORY_V3": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+    "ROUTER_V3": "0x1b81D678ffb9C0263b24A97847620C99d213eB14"
   }
 }
