@@ -37,6 +37,7 @@ contract DexAggregator {
     ) public view returns (address chosenDex, uint256 highestReturnAmount) {
         // ExactInputSingleParams(_path[0], _path[1], poolFee, msg.sender, block.timestamp + 1 minute, _amount, amountOutMinimum, sqrtPriceLimitX96)
 
+        // not sure how this works below. The use of IswapRouter
         for (uint256 i = 0; i < routers.length; i++) {
             uint256 returnAmount = ISwapRouter(routers[i]).getAmountsOut(
                 _amount,
