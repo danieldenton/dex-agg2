@@ -9,7 +9,7 @@ contract DexAggregator {
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
-    uint24 public constant feeTier = 3000;
+    uint24 public constant poolFee = 3000;
     address public owner;
 
     constructor(address[] memory _routers, uint16 _defaultSlippagePercent) {
@@ -18,11 +18,15 @@ contract DexAggregator {
         defaultSlippagePercent = _defaultSlippagePercent;
     }
 
-    function separateFee(
-        uint256 _amount
-    ) public pure returns (uint256 amountAfterFee, uint256 fee) {
-        fee = (_amount * 3) / 10000; // .03% fee
-        amountAfterFee = _amount - fee;
+    struct ExactInputSingleParams {
+        address tokenIn;
+        address tokenOut;
+        uint24 fee;
+        address recipient;
+        uint256 deadline;
+        uint256 amountIn;
+        uint256 amountOutMinimum;
+        uint160 sqrtPriceLimitX96;
     }
 
     // path is going to be 2 token addresses in an array
@@ -31,11 +35,11 @@ contract DexAggregator {
         address[] memory _path,
         uint256 _amount
     ) public view returns (address chosenDex, uint256 highestReturnAmount) {
-        (uint256 _amountAfterFee, ) = separateFee(_amount);
+        // ExactInputSingleParams(_path[0], _path[1], poolFee, msg.sender, block.timestamp + 1 minute, _amount, amountOutMinimum, sqrtPriceLimitX96)
 
         for (uint256 i = 0; i < routers.length; i++) {
             uint256 returnAmount = ISwapRouter(routers[i]).getAmountsOut(
-                _amountAfterFee,
+                _amount,
                 _path
             );
             if (returnAmount > highestReturnAmount) {
