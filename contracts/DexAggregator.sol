@@ -6,7 +6,6 @@ import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 
 contract DexAggregator {
-    ISwapRouter public immutable swapRouter;
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
@@ -14,8 +13,10 @@ contract DexAggregator {
     address public owner;
 
 
-    constructor(ISwapRouter _swapRouter) {
-        swapRouter = _swapRouter;
+    constructor(address[] memory _routers, uint16 _defaultSlippagePercent) {
+        routers = _routers;
+        owner = msg.sender;
+        defaultSlippagePercent = _defaultSlippagePercent;
     }
 
 
@@ -26,32 +27,27 @@ contract DexAggregator {
         amountAfterFee = _amount - fee;
     }
 
+// path is going to be 2 token addresses in an array
+// router is the dex address
     function dexSelector(
         address[] memory _path,
         uint256 _amount
     ) public view returns (address chosenDex, uint256 returnAmount) {
         (uint256 _amountAfterFee, ) = separateFee(_amount);
 
-        returnAmount = swapRouter.
+        returnAmount = swapRouter()
 
-        (uint256 amm1Return, ) = amm1.calculateTokenSwap(
-            _tokenGiveAddress,
-            _tokenGetAddress,
-            _amountAfterFee
-        );
-        (uint256 amm2Return, ) = amm2.calculateTokenSwap(
-            _tokenGiveAddress,
-            _tokenGetAddress,
-            _amountAfterFee
-        );
-
-        if (amm1Return > amm2Return) {
-            chosenAMM = address(amm1);
-            returnAmount = amm1Return;
-        } else {
-            chosenAMM = address(amm2);
-            returnAmount = amm2Return;
+        for (i = 0; i < routers.length; i++) {
+            amountOut = ISwapRouter(routers[i]).getAmountsOut(
+                    _amount,
+                    _path
+                );
+            if (amountOut[lastHop] > bestAmountOut) {
+                bestAmountOut = amountOut[lastHop];
+                bestRouter = routers[i];
+            }
         }
+
     }
 
     function swapWETHForDAI(uint256 amountIn) external returns (uint256 amountOut) {
